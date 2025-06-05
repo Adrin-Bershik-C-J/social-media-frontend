@@ -7,12 +7,16 @@ const Profile = () => {
   const [myPosts, setMyPosts] = useState([]);
   const [editingPostId, setEditingPostId] = useState(null);
   const [editedCaption, setEditedCaption] = useState("");
-  const token = localStorage.getItem("token");
   const [editingProfile, setEditingProfile] = useState(false);
   const [editName, setEditName] = useState("");
   const [editBio, setEditBio] = useState("");
 
-  // When user is loaded, initialize editName and editBio
+  const [activeTab, setActiveTab] = useState("Posts");
+  const [followers, setFollowers] = useState([]);
+  const [following, setFollowing] = useState([]);
+
+  const token = localStorage.getItem("token");
+
   useEffect(() => {
     if (user) {
       setEditName(user.name || "");
@@ -29,7 +33,7 @@ const Profile = () => {
       );
       localStorage.setItem("user", JSON.stringify(res.data));
       setEditingProfile(false);
-      window.location.reload(); // optional: force refresh to update UI
+      window.location.reload(); // optional
     } catch (err) {
       console.error("Error updating profile:", err);
     }
@@ -43,6 +47,28 @@ const Profile = () => {
       setMyPosts(res.data);
     } catch (err) {
       console.error("Error fetching my posts:", err);
+    }
+  };
+
+  const fetchFollowers = async () => {
+    try {
+      const res = await axios.get("http://localhost:5000/api/users/followers", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setFollowers(res.data);
+    } catch (err) {
+      console.error("Error fetching followers:", err);
+    }
+  };
+
+  const fetchFollowing = async () => {
+    try {
+      const res = await axios.get("http://localhost:5000/api/users/following", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setFollowing(res.data);
+    } catch (err) {
+      console.error("Error fetching following:", err);
     }
   };
 
@@ -97,7 +123,11 @@ const Profile = () => {
   };
 
   useEffect(() => {
-    if (isLoggedIn) fetchMyPosts();
+    if (isLoggedIn) {
+      fetchMyPosts();
+      fetchFollowers();
+      fetchFollowing();
+    }
   }, [isLoggedIn]);
 
   if (!isLoggedIn) return <p className="text-center mt-10">Please login.</p>;
@@ -155,79 +185,127 @@ const Profile = () => {
         )}
       </div>
 
-      {/* My Posts */}
-      <div className="space-y-4">
-        {myPosts.map((post) => (
-          <div
-            key={post._id}
-            className="bg-white p-4 rounded-xl shadow relative"
+      {/* Tab Navigation */}
+      <div className="flex justify-around border-b border-gray-200">
+        {["Posts", "Followers", "Following"].map((tab) => (
+          <button
+            key={tab}
+            onClick={() => setActiveTab(tab)}
+            className={`py-2 px-4 font-medium ${
+              activeTab === tab
+                ? "text-black font-semibold border-b-2 border-blue-600"
+                : "text-gray-500"
+            }`}
           >
-            {editingPostId === post._id ? (
-              <>
-                <textarea
-                  className="w-full p-2 border rounded-lg"
-                  value={editedCaption}
-                  onChange={(e) => setEditedCaption(e.target.value)}
-                />
-                <div className="flex gap-2 mt-2">
-                  <button
-                    onClick={() => handleEdit(post._id)}
-                    className="bg-green-600 text-white px-4 py-1 rounded-lg"
-                  >
-                    Save
-                  </button>
-                  <button
-                    onClick={() => setEditingPostId(null)}
-                    className="bg-gray-400 text-white px-4 py-1 rounded-lg"
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </>
-            ) : (
-              <>
-                <p className="text-gray-800">{post.caption}</p>
-                <p className="text-xs text-gray-500 mt-1">
-                  {new Date(post.createdAt).toLocaleString()}
-                </p>
-
-                {/* Like Button */}
-                <div className="flex items-center mt-3 space-x-2">
-                  <button
-                    onClick={() => handleLikeToggle(post._id)}
-                    className={`text-sm font-medium ${
-                      post.isLiked ? "text-red-600" : "text-gray-600"
-                    }`}
-                  >
-                    {post.isLiked ? "❤️" : "🤍"} Like
-                  </button>
-                  <span className="text-sm text-gray-600">
-                    {post.likeCount} likes
-                  </span>
-                </div>
-
-                {/* Edit/Delete Buttons */}
-                <div className="flex gap-2 mt-2">
-                  <button
-                    onClick={() => {
-                      setEditingPostId(post._id);
-                      setEditedCaption(post.caption);
-                    }}
-                    className="text-blue-600 hover:underline"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDelete(post._id)}
-                    className="text-red-600 hover:underline"
-                  >
-                    Delete
-                  </button>
-                </div>
-              </>
-            )}
-          </div>
+            {tab}
+          </button>
         ))}
+      </div>
+
+      {/* Tab Content */}
+      <div className="mt-4 space-y-4">
+        {activeTab === "Posts" &&
+          (myPosts.length === 0 ? (
+            <p className="text-center text-gray-500">No posts yet.</p>
+          ) : (
+            myPosts.map((post) => (
+              <div
+                key={post._id}
+                className="bg-white p-4 rounded-xl shadow relative"
+              >
+                {editingPostId === post._id ? (
+                  <>
+                    <textarea
+                      className="w-full p-2 border rounded-lg"
+                      value={editedCaption}
+                      onChange={(e) => setEditedCaption(e.target.value)}
+                    />
+                    <div className="flex gap-2 mt-2">
+                      <button
+                        onClick={() => handleEdit(post._id)}
+                        className="bg-green-600 text-white px-4 py-1 rounded-lg"
+                      >
+                        Save
+                      </button>
+                      <button
+                        onClick={() => setEditingPostId(null)}
+                        className="bg-gray-400 text-white px-4 py-1 rounded-lg"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <p className="text-gray-800">{post.caption}</p>
+                    <p className="text-xs text-gray-500 mt-1">
+                      {new Date(post.createdAt).toLocaleString()}
+                    </p>
+                    <div className="flex items-center mt-3 space-x-2">
+                      <button
+                        onClick={() => handleLikeToggle(post._id)}
+                        className={`text-sm font-medium ${
+                          post.isLiked ? "text-red-600" : "text-gray-600"
+                        }`}
+                      >
+                        {post.isLiked ? "❤️" : "🤍"} Like
+                      </button>
+                      <span className="text-sm text-gray-600">
+                        {post.likeCount} likes
+                      </span>
+                    </div>
+                    <div className="flex gap-2 mt-2">
+                      <button
+                        onClick={() => {
+                          setEditingPostId(post._id);
+                          setEditedCaption(post.caption);
+                        }}
+                        className="text-blue-600 hover:underline"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleDelete(post._id)}
+                        className="text-red-600 hover:underline"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </>
+                )}
+              </div>
+            ))
+          ))}
+
+        {activeTab === "Followers" && (
+          <ul className="bg-white p-4 rounded-xl shadow">
+            {followers.length === 0 ? (
+              <p className="text-center text-gray-500">No followers yet.</p>
+            ) : (
+              followers.map((f) => (
+                <li key={f._id} className="py-2 border-b last:border-none">
+                  <span className="font-medium">{f.name}</span> @{f.username}
+                </li>
+              ))
+            )}
+          </ul>
+        )}
+
+        {activeTab === "Following" && (
+          <ul className="bg-white p-4 rounded-xl shadow">
+            {following.length === 0 ? (
+              <p className="text-center text-gray-500">
+                Not following anyone yet.
+              </p>
+            ) : (
+              following.map((f) => (
+                <li key={f._id} className="py-2 border-b last:border-none">
+                  <span className="font-medium">{f.name}</span> @{f.username}
+                </li>
+              ))
+            )}
+          </ul>
+        )}
       </div>
     </div>
   );
