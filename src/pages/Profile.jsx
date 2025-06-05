@@ -8,6 +8,32 @@ const Profile = () => {
   const [editingPostId, setEditingPostId] = useState(null);
   const [editedCaption, setEditedCaption] = useState("");
   const token = localStorage.getItem("token");
+  const [editingProfile, setEditingProfile] = useState(false);
+  const [editName, setEditName] = useState("");
+  const [editBio, setEditBio] = useState("");
+
+  // When user is loaded, initialize editName and editBio
+  useEffect(() => {
+    if (user) {
+      setEditName(user.name || "");
+      setEditBio(user.bio || "");
+    }
+  }, [user]);
+
+  const handleProfileUpdate = async () => {
+    try {
+      const res = await axios.put(
+        "http://localhost:5000/api/users/update",
+        { name: editName, bio: editBio },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      localStorage.setItem("user", JSON.stringify(res.data));
+      setEditingProfile(false);
+      window.location.reload(); // optional: force refresh to update UI
+    } catch (err) {
+      console.error("Error updating profile:", err);
+    }
+  };
 
   const fetchMyPosts = async () => {
     try {
@@ -82,14 +108,60 @@ const Profile = () => {
 
       {/* User Info */}
       <div className="bg-white p-4 rounded-xl shadow mb-6">
-        <p className="text-lg font-semibold">{user.name}</p>
-        <p className="text-gray-600">@{user.username}</p>
+        {editingProfile ? (
+          <>
+            <input
+              type="text"
+              className="border p-2 rounded w-full mb-2"
+              value={editName}
+              onChange={(e) => setEditName(e.target.value)}
+              placeholder="Name"
+            />
+            <textarea
+              className="border p-2 rounded w-full mb-2"
+              value={editBio}
+              onChange={(e) => setEditBio(e.target.value)}
+              placeholder="Bio"
+            />
+            <div className="flex gap-2">
+              <button
+                onClick={handleProfileUpdate}
+                className="bg-green-600 text-white px-4 py-1 rounded-lg"
+              >
+                Save
+              </button>
+              <button
+                onClick={() => setEditingProfile(false)}
+                className="bg-gray-400 text-white px-4 py-1 rounded-lg"
+              >
+                Cancel
+              </button>
+            </div>
+          </>
+        ) : (
+          <>
+            <p className="text-lg font-semibold">{user.name}</p>
+            <p className="text-gray-600">@{user.username}</p>
+            {user.bio && (
+              <p className="text-sm text-gray-500 mt-1">{user.bio}</p>
+            )}
+            <button
+              onClick={() => setEditingProfile(true)}
+              className="text-blue-600 hover:underline mt-2 block"
+            >
+              Edit Profile
+            </button>
+          </>
+        )}
       </div>
 
       {/* My Posts */}
       <div className="space-y-4">
         {myPosts.map((post) => (
-          <div key={post._id} className="bg-white p-4 rounded-xl shadow relative">
+          <div
+            key={post._id}
+            className="bg-white p-4 rounded-xl shadow relative"
+          >
             {editingPostId === post._id ? (
               <>
                 <textarea
@@ -129,7 +201,9 @@ const Profile = () => {
                   >
                     {post.isLiked ? "❤️" : "🤍"} Like
                   </button>
-                  <span className="text-sm text-gray-600">{post.likeCount} likes</span>
+                  <span className="text-sm text-gray-600">
+                    {post.likeCount} likes
+                  </span>
                 </div>
 
                 {/* Edit/Delete Buttons */}
