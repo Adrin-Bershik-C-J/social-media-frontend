@@ -1,7 +1,7 @@
 // src/pages/Register.jsx
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -19,7 +19,10 @@ const Register = () => {
     setSuccess("");
 
     try {
-      const response = await axios.post("http://localhost:5000/api/auth/register", form);
+      const response = await axios.post(
+        "http://localhost:5000/api/auth/register",
+        form
+      );
       setSuccess("Registration successful!");
       // You can store the token in localStorage if needed
       localStorage.setItem("token", response.data.token);
@@ -74,6 +77,13 @@ const Register = () => {
             Register
           </button>
         </form>
+        {/* Login redirect */}
+        <p className="text-sm text-center mt-4">
+          Already a user?{" "}
+          <Link to="/login" className="text-blue-600 hover:underline">
+            Login
+          </Link>
+        </p>
       </div>
     </div>
   );

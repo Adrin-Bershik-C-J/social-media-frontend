@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
   const { user, isLoggedIn } = useAuth();
@@ -16,6 +17,13 @@ const Profile = () => {
   const [following, setFollowing] = useState([]);
 
   const token = localStorage.getItem("token");
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    navigate("/login");
+  };
 
   useEffect(() => {
     if (user) {
@@ -134,7 +142,15 @@ const Profile = () => {
 
   return (
     <div className="p-4 max-w-xl mx-auto">
-      <h2 className="text-2xl font-bold mb-4">My Profile</h2>
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-2xl font-bold">My Profile</h2>
+        <button
+          onClick={handleLogout}
+          className="text-red-600 border border-red-600 px-3 py-1 rounded hover:bg-red-50 transition"
+        >
+          Logout
+        </button>
+      </div>
 
       {/* User Info */}
       <div className="bg-white p-4 rounded-xl shadow mb-6">
