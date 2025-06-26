@@ -23,7 +23,7 @@ const Login = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/auth/login",
+        "https://social-media-backend-uv33.onrender.com/api/auth/login",
         form
       );
       login(response.data.user, response.data.token);

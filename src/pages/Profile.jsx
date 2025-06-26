@@ -35,7 +35,7 @@ const Profile = () => {
   const handleProfileUpdate = async () => {
     try {
       const res = await axios.put(
-        "http://localhost:5000/api/users/update",
+        "https://social-media-backend-uv33.onrender.com/api/users/update",
         { name: editName, bio: editBio },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -49,7 +49,7 @@ const Profile = () => {
 
   const fetchMyPosts = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/posts/", {
+      const res = await axios.get("https://social-media-backend-uv33.onrender.com/api/posts/", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setMyPosts(res.data);
@@ -60,7 +60,7 @@ const Profile = () => {
 
   const fetchFollowers = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/users/followers", {
+      const res = await axios.get("https://social-media-backend-uv33.onrender.com/api/users/followers", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setFollowers(res.data);
@@ -71,7 +71,7 @@ const Profile = () => {
 
   const fetchFollowing = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/users/following", {
+      const res = await axios.get("https://social-media-backend-uv33.onrender.com/api/users/following", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setFollowing(res.data);
@@ -82,7 +82,7 @@ const Profile = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/posts/${id}`, {
+      await axios.delete(`https://social-media-backend-uv33.onrender.com/api/posts/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchMyPosts();
@@ -94,7 +94,7 @@ const Profile = () => {
   const handleEdit = async (id) => {
     try {
       await axios.put(
-        `http://localhost:5000/api/posts/edit/${id}`,
+        `https://social-media-backend-uv33.onrender.com/api/posts/edit/${id}`,
         { caption: editedCaption },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -109,7 +109,7 @@ const Profile = () => {
   const handleLikeToggle = async (postId) => {
     try {
       const res = await axios.post(
-        `http://localhost:5000/api/posts/${postId}/like`,
+        `https://social-media-backend-uv33.onrender.com/api/posts/${postId}/like`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );

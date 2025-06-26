@@ -24,7 +24,7 @@ const Register = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/auth/register",
+        "https://social-media-backend-uv33.onrender.com/api/auth/register",
         form
       );
       setSuccess("Registration successful! Redirecting to login...");
