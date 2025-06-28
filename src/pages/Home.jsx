@@ -103,7 +103,7 @@ const Home = () => {
     setLoading(true);
     try {
       const res = await axios.get(
-        `https://social-media-backend-uv33.onrender.com/api/posts/feed?page=${page}&limit=${postsPerPage}`,
+        `http://localhost:5000/api/posts/feed?page=${page}&limit=${postsPerPage}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -143,7 +143,7 @@ const Home = () => {
   const handleFollowToggle = async (targetUserId) => {
     try {
       const res = await axios.post(
-        `https://social-media-backend-uv33.onrender.com/api/users/follow/${targetUserId}`,
+        `http://localhost:5000/api/users/follow/${targetUserId}`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -182,7 +182,7 @@ const Home = () => {
   const fetchComments = async (postId) => {
     try {
       const res = await axios.get(
-        `https://social-media-backend-uv33.onrender.com/api/comments/${postId}`,
+        `http://localhost:5000/api/comments/${postId}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -207,7 +207,7 @@ const Home = () => {
         formData.append("files", file);
       });
 
-      await axios.post("https://social-media-backend-uv33.onrender.com/api/posts/", formData, {
+      await axios.post("http://localhost:5000/api/posts/", formData, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
@@ -236,7 +236,7 @@ const Home = () => {
   const handleLikeToggle = async (postId) => {
     try {
       const res = await axios.post(
-        `https://social-media-backend-uv33.onrender.com/api/posts/${postId}/like`,
+        `http://localhost:5000/api/posts/${postId}/like`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -264,7 +264,7 @@ const Home = () => {
 
     try {
       await axios.post(
-        `https://social-media-backend-uv33.onrender.com/api/comments/${postId}`,
+        `http://localhost:5000/api/comments/${postId}`,
         { text: commentText, parent: parentId },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -288,7 +288,7 @@ const Home = () => {
   const handleCommentLike = async (commentId, postId) => {
     try {
       await axios.post(
-        `https://social-media-backend-uv33.onrender.com/api/comments/like/${commentId}`,
+        `http://localhost:5000/api/comments/like/${commentId}`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
