@@ -31,7 +31,7 @@ const Register = () => {
       localStorage.setItem("token", response.data.token);
       // Delay navigation to show success message
       setTimeout(() => {
-        navigate("/login");
+        navigate("/");
       }, 1500);
     } catch (err) {
       if (err.response && err.response.data.message) {
@@ -273,7 +273,7 @@ const Register = () => {
         <div className="mt-8 text-center text-sm text-gray-600">
           Already have an account?{" "}
           <Link
-            to="/login"
+            to="/"
             className="text-indigo-600 hover:text-indigo-800 font-semibold transition-colors duration-200"
           >
             Sign in here

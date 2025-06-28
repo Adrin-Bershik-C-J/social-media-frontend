@@ -122,7 +122,7 @@ const Profile = () => {
         <button
           onClick={() => {
             localStorage.clear();
-            navigate("/login");
+            navigate("/");
           }}
           className="px-4 py-2 border border-red-300 text-red-700 bg-white hover:bg-red-50 font-medium rounded-lg flex items-center gap-2"
         >
