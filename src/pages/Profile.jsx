@@ -13,6 +13,8 @@ import {
   toggleLike,
 } from "../api/profile";
 import axios from "axios";
+import config from "../config";
+const URL = config.API_URL;
 
 const Profile = () => {
   const { user, isLoggedIn, refreshUser } = useAuth();
@@ -53,7 +55,7 @@ const Profile = () => {
 
     try {
       const res = await axios.put(
-        "http://localhost:5000/api/users/upload-profile-picture",
+        `${URL}/api/users/upload-profile-picture`,
         formData,
         {
           headers: {

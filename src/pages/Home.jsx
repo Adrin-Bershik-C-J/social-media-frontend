@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
+import config from "../config";
+const URL = config.API_URL;
 
 const Home = () => {
   const { user, isLoggedIn } = useAuth();
@@ -45,7 +47,6 @@ const Home = () => {
   }, [user]);
 
   // Add these functions before your existing handleCreatePost function
-  // Add these functions before your existing handleCreatePost function
   const handleFileSelect = (e) => {
     const files = Array.from(e.target.files);
 
@@ -77,11 +78,28 @@ const Home = () => {
     setSelectedFiles(validFiles);
 
     // Create previews
-    const newPreviews = validFiles.map((file) => ({
-      file,
-      url: URL.createObjectURL(file),
-      type: file.type.startsWith("image/") ? "image" : "video",
-    }));
+    const newPreviews = validFiles
+      .map((file) => {
+        try {
+          if (file && typeof file === "object" && file.type) {
+            return {
+              file,
+              url: (window.URL || window.webkitURL).createObjectURL(file),
+              type: file.type.startsWith("image/") ? "image" : "video",
+            };
+          } else {
+            console.warn("Skipping invalid file:", file);
+            return null;
+          }
+        } catch (err) {
+          console.error("Error creating preview for:", file, err);
+          return null;
+        }
+      })
+      .filter(Boolean); // Remove null entries
+    console.log("Valid files:", validFiles);
+    console.log("typeof first file:", typeof validFiles[0]);
+    console.log("Instanceof File?", validFiles[0] instanceof File);
     setPreviews(newPreviews);
   };
 
@@ -103,7 +121,7 @@ const Home = () => {
     setLoading(true);
     try {
       const res = await axios.get(
-        `http://localhost:5000/api/posts/feed?page=${page}&limit=${postsPerPage}`,
+        `${URL}/api/posts/feed?page=${page}&limit=${postsPerPage}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -143,7 +161,7 @@ const Home = () => {
   const handleFollowToggle = async (targetUserId) => {
     try {
       const res = await axios.post(
-        `http://localhost:5000/api/users/follow/${targetUserId}`,
+        `${URL}/api/users/follow/${targetUserId}`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -181,12 +199,9 @@ const Home = () => {
   // Fetch comments for a specific post
   const fetchComments = async (postId) => {
     try {
-      const res = await axios.get(
-        `http://localhost:5000/api/comments/${postId}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const res = await axios.get(`${URL}/api/comments/${postId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       setComments((prev) => ({ ...prev, [postId]: res.data }));
     } catch (err) {
       console.error("Error fetching comments:", err);
@@ -207,7 +222,7 @@ const Home = () => {
         formData.append("files", file);
       });
 
-      await axios.post("http://localhost:5000/api/posts/", formData, {
+      await axios.post(`${URL}/api/posts/`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
@@ -220,7 +235,13 @@ const Home = () => {
       setPreviews([]);
 
       // Clean up preview URLs
-      previews.forEach((preview) => URL.revokeObjectURL(preview.url));
+      previews.forEach((preview) => {
+        if ((window.URL || window.webkitURL)?.revokeObjectURL) {
+          (window.URL || window.webkitURL).revokeObjectURL(preview.url);
+        } else {
+          console.warn("revokeObjectURL not supported in this environment.");
+        }
+      });
 
       // Refresh the feed
       fetchFeedPosts(1, true);
@@ -236,7 +257,7 @@ const Home = () => {
   const handleLikeToggle = async (postId) => {
     try {
       const res = await axios.post(
-        `http://localhost:5000/api/posts/${postId}/like`,
+        `${URL}/api/posts/${postId}/like`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -264,7 +285,7 @@ const Home = () => {
 
     try {
       await axios.post(
-        `http://localhost:5000/api/comments/${postId}`,
+        `${URL}/api/comments/${postId}`,
         { text: commentText, parent: parentId },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -288,7 +309,7 @@ const Home = () => {
   const handleCommentLike = async (commentId, postId) => {
     try {
       await axios.post(
-        `http://localhost:5000/api/comments/like/${commentId}`,
+        `${URL}/api/comments/like/${commentId}`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -858,10 +879,18 @@ const Home = () => {
                   <div className="mt-6 space-y-4">
                     {/* Add Comment Form */}
                     <div className="flex gap-3">
-                      <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
-                        {user.name?.charAt(0)?.toUpperCase() ||
-                          user.username?.charAt(0)?.toUpperCase()}
-                      </div>
+                      {user.profilePicture ? (
+                        <img
+                          src={user.profilePicture}
+                          alt="User"
+                          className="w-12 h-12 rounded-full object-cover flex-shrink-0"
+                        />
+                      ) : (
+                        <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-lg font-bold flex-shrink-0">
+                          {user.name?.charAt(0)?.toUpperCase() ||
+                            user.username?.charAt(0)?.toUpperCase()}
+                        </div>
+                      )}
                       <div className="flex-1 flex gap-3">
                         <input
                           type="text"

@@ -21,11 +21,17 @@ const PostCard = ({
           value={editedCaption}
           onChange={(e) => setEditedCaption(e.target.value)}
         />
-        <div className="flex gap-3">
-          <button onClick={saveEdit} className="btn btn-success">
+        <div className="flex flex-wrap gap-4 mt-4">
+          <button
+            onClick={saveEdit}
+            className="px-6 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow transition duration-200"
+          >
             Save
           </button>
-          <button onClick={cancelEdit} className="btn btn-secondary">
+          <button
+            onClick={cancelEdit}
+            className="px-6 py-2 bg-gray-500 hover:bg-gray-600 text-white font-semibold rounded-lg shadow transition duration-200"
+          >
             Cancel
           </button>
         </div>

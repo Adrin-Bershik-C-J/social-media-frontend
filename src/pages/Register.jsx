@@ -4,6 +4,8 @@ import { useNavigate, Link } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { HiEye, HiEyeOff } from "react-icons/hi"; // for eye icon
+import config from "../config";
+const URL = config.API_URL;
 
 const Register = () => {
   const navigate = useNavigate();
@@ -41,10 +43,7 @@ const Register = () => {
     setSuccessMessage("");
 
     try {
-      const response = await axios.post(
-        "http://localhost:5000/api/auth/register",
-        values
-      );
+      const response = await axios.post(`${URL}/api/auth/register`, values);
       setSuccessMessage("Registration successful! Redirecting to login...");
       localStorage.setItem("token", response.data.token);
       setTimeout(() => {

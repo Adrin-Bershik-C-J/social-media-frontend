@@ -5,6 +5,8 @@ import axios from "axios";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { HiEye, HiEyeOff } from "react-icons/hi";
+import config from "../config";
+const URL = config.API_URL;
 
 const Login = () => {
   const navigate = useNavigate();
@@ -27,10 +29,7 @@ const Login = () => {
     setError("");
     setIsLoading(true);
     try {
-      const response = await axios.post(
-        "http://localhost:5000/api/auth/login",
-        values
-      );
+      const response = await axios.post(`${URL}/api/auth/login`, values);
       login(response.data.user, response.data.token);
       navigate("/home");
     } catch (err) {

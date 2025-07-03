@@ -1,8 +1,10 @@
 // src/api/profile.js
 import axios from "axios";
+import config from "../config";
+const URL = config.API_URL;
 
 const API = axios.create({
-  baseURL: "http://localhost:5000/api",
+  baseURL: `${URL}/api`,
 });
 
 export const fetchMyPosts = (token) =>
