@@ -325,10 +325,19 @@ const Home = () => {
       >
         <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 mb-3">
           <div className="flex items-start gap-3">
-            <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
-              {comment.user.name?.charAt(0)?.toUpperCase() ||
-                comment.user.username?.charAt(0)?.toUpperCase()}
-            </div>
+            {comment.user.profilePicture ? (
+              <img
+                src={comment.user.profilePicture}
+                alt="User"
+                className="w-8 h-8 rounded-full object-cover flex-shrink-0"
+              />
+            ) : (
+              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
+                {comment.user.name?.charAt(0)?.toUpperCase() ||
+                  comment.user.username?.charAt(0)?.toUpperCase()}
+              </div>
+            )}
+
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-1">
                 <p className="font-semibold text-gray-900 text-sm">
@@ -502,10 +511,19 @@ const Home = () => {
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-8">
           <form onSubmit={handleCreatePost} className="space-y-4">
             <div className="flex items-start gap-4">
-              <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-lg font-bold flex-shrink-0">
-                {user.name?.charAt(0)?.toUpperCase() ||
-                  user.username?.charAt(0)?.toUpperCase()}
-              </div>
+              {user.profilePicture ? (
+                <img
+                  src={user.profilePicture}
+                  alt="User"
+                  className="w-12 h-12 rounded-full object-cover flex-shrink-0"
+                />
+              ) : (
+                <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-lg font-bold flex-shrink-0">
+                  {user.name?.charAt(0)?.toUpperCase() ||
+                    user.username?.charAt(0)?.toUpperCase()}
+                </div>
+              )}
+
               <div className="flex-1">
                 <textarea
                   rows="4"
@@ -668,10 +686,19 @@ const Home = () => {
               >
                 {/* Post Header */}
                 <div className="flex items-start gap-4 mb-4">
-                  <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-blue-600 rounded-full flex items-center justify-center text-white text-lg font-bold flex-shrink-0">
-                    {post.user.name?.charAt(0)?.toUpperCase() ||
-                      post.user.username?.charAt(0)?.toUpperCase()}
-                  </div>
+                  {post.user.profilePicture ? (
+                    <img
+                      src={post.user.profilePicture}
+                      alt="User"
+                      className="w-12 h-12 rounded-full object-cover flex-shrink-0"
+                    />
+                  ) : (
+                    <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-blue-600 rounded-full flex items-center justify-center text-white text-lg font-bold flex-shrink-0">
+                      {post.user.name?.charAt(0)?.toUpperCase() ||
+                        post.user.username?.charAt(0)?.toUpperCase()}
+                    </div>
+                  )}
+
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2 mb-1">

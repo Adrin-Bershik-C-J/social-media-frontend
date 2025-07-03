@@ -35,6 +35,25 @@ const PostCard = ({
 
   return (
     <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
+      <div className="flex items-center gap-3 mb-4">
+        {post.user?.profilePicture ? (
+          <img
+            src={post.user.profilePicture}
+            alt="User"
+            className="w-10 h-10 rounded-full object-cover"
+          />
+        ) : (
+          <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-sm font-bold">
+            {post.user?.name?.charAt(0)?.toUpperCase() ||
+              post.user?.username?.charAt(0)?.toUpperCase()}
+          </div>
+        )}
+        <div>
+          <p className="font-semibold text-gray-900">{post.user?.name}</p>
+          <p className="text-sm text-gray-500">@{post.user?.username}</p>
+        </div>
+      </div>
+
       <p className="text-lg text-gray-900 mb-3">{post.caption}</p>
       <p className="text-sm text-gray-500 mb-4">
         {new Date(post.createdAt).toLocaleString("en-US")}

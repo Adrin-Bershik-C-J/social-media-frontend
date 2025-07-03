@@ -12,9 +12,10 @@ import {
   editPost,
   toggleLike,
 } from "../api/profile";
+import axios from "axios";
 
 const Profile = () => {
-  const { user, isLoggedIn } = useAuth();
+  const { user, isLoggedIn, refreshUser } = useAuth();
   const [myPosts, setMyPosts] = useState([]);
   const [editingPostId, setEditingPostId] = useState(null);
   const [editedCaption, setEditedCaption] = useState("");
@@ -43,6 +44,28 @@ const Profile = () => {
       window.location.reload();
     } catch (err) {
       console.error("Error updating profile:", err);
+    }
+  };
+
+  const handleProfilePicUpload = async (file) => {
+    const formData = new FormData();
+    formData.append("profilePic", file);
+
+    try {
+      const res = await axios.put(
+        "http://localhost:5000/api/users/upload-profile-picture",
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      await refreshUser(); // update context
+    } catch (err) {
+      console.error("Error uploading profile picture:", err);
     }
   };
 
@@ -159,6 +182,17 @@ const Profile = () => {
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
+                Profile Picture
+              </label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => handleProfilePicUpload(e.target.files[0])}
+                className="w-full"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
                 Bio
               </label>
               <textarea
@@ -168,6 +202,7 @@ const Profile = () => {
                 onChange={(e) => setEditBio(e.target.value)}
               />
             </div>
+
             <div className="flex gap-3">
               <button
                 onClick={handleProfileUpdate}
@@ -187,10 +222,19 @@ const Profile = () => {
           <div className="flex items-start justify-between">
             <div className="flex-1">
               <div className="flex items-center gap-4 mb-4">
-                <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-2xl font-bold">
-                  {user.name?.charAt(0)?.toUpperCase() ||
-                    user.username?.charAt(0)?.toUpperCase()}
-                </div>
+                {user.profilePicture ? (
+                  <img
+                    src={user.profilePicture}
+                    alt="Profile"
+                    className="w-16 h-16 rounded-full object-cover"
+                  />
+                ) : (
+                  <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-2xl font-bold">
+                    {user.name?.charAt(0)?.toUpperCase() ||
+                      user.username?.charAt(0)?.toUpperCase()}
+                  </div>
+                )}
+
                 <div>
                   <h2 className="text-2xl font-bold text-gray-900">
                     {user.name}
