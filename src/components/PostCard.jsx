@@ -24,13 +24,13 @@ const PostCard = ({
         <div className="flex flex-wrap gap-4 mt-4">
           <button
             onClick={saveEdit}
-            className="px-6 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow transition duration-200"
+            className="px-6 py-2 cursor-pointer bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow transition duration-200"
           >
             Save
           </button>
           <button
             onClick={cancelEdit}
-            className="px-6 py-2 bg-gray-500 hover:bg-gray-600 text-white font-semibold rounded-lg shadow transition duration-200"
+            className="px-6 py-2 cursor-pointer bg-gray-500 hover:bg-gray-600 text-white font-semibold rounded-lg shadow transition duration-200"
           >
             Cancel
           </button>
@@ -67,7 +67,7 @@ const PostCard = ({
       <div className="flex items-center justify-between">
         <button
           onClick={onLike}
-          className={`inline-flex items-center gap-2 px-3 py-2 rounded-lg font-medium transition-colors duration-200 ${
+          className={`inline-flex cursor-pointer items-center gap-2 px-3 py-2 rounded-lg font-medium transition-colors duration-200 ${
             post.isLiked
               ? "text-red-600 bg-red-50 hover:bg-red-100"
               : "text-gray-600 bg-gray-100 hover:bg-gray-200"
@@ -92,7 +92,7 @@ const PostCard = ({
         <div className="flex gap-2 mt-4">
           <button
             onClick={onEdit}
-            className="inline-flex items-center px-3 py-2 text-blue-600 bg-blue-50 hover:bg-blue-100 font-medium rounded-lg transition-colors duration-200"
+            className="inline-flex cursor-pointer items-center px-3 py-2 text-blue-600 bg-blue-50 hover:bg-blue-100 font-medium rounded-lg transition-colors duration-200"
           >
             <svg
               className="w-4 h-4 mr-1"
@@ -111,7 +111,7 @@ const PostCard = ({
           </button>
           <button
             onClick={onDelete}
-            className="inline-flex items-center px-3 py-2 text-red-600 bg-red-50 hover:bg-red-100 font-medium rounded-lg transition-colors duration-200"
+            className="inline-flex cursor-pointer items-center px-3 py-2 text-red-600 bg-red-50 hover:bg-red-100 font-medium rounded-lg transition-colors duration-200"
           >
             <svg
               className="w-4 h-4 mr-1"

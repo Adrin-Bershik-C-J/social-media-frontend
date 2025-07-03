@@ -385,7 +385,7 @@ const Home = () => {
           <div className="flex items-center mt-3 gap-4">
             <button
               onClick={() => handleCommentLike(comment._id, postId)}
-              className={`inline-flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-medium transition-colors duration-200 ${
+              className={`inline-flex cursor-pointer items-center gap-1 px-2 py-1 rounded-lg text-xs font-medium transition-colors duration-200 ${
                 comment.likes.includes(user._id)
                   ? "text-red-600 bg-red-50 hover:bg-red-100"
                   : "text-gray-600 bg-gray-100 hover:bg-gray-200"
@@ -416,7 +416,7 @@ const Home = () => {
                   [comment._id]: !prev[comment._id],
                 }))
               }
-              className="inline-flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 transition-colors duration-200"
+              className="inline-flex cursor-pointer items-center gap-1 px-2 py-1 rounded-lg text-xs font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 transition-colors duration-200"
             >
               <svg
                 className="w-3 h-3"
@@ -453,7 +453,7 @@ const Home = () => {
                 />
                 <button
                   onClick={() => handleCreateComment(postId, comment._id)}
-                  className="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                  className="inline-flex cursor-pointer items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                 >
                   <svg
                     className="w-4 h-4 mr-1"
@@ -509,7 +509,7 @@ const Home = () => {
           </div>
           <button
             onClick={() => navigate("/profile")}
-            className="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            className="inline-flex items-center cursor-pointer px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           >
             <svg
               className="w-4 h-4 mr-2"
@@ -626,7 +626,7 @@ const Home = () => {
                 disabled={
                   (!caption.trim() && selectedFiles.length === 0) || isUploading
                 }
-                className="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                className="inline-flex items-center px-6 py-3 cursor-pointer bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
               >
                 {isUploading ? (
                   <>
@@ -734,7 +734,7 @@ const Home = () => {
                       {post.user._id !== user._id && (
                         <button
                           onClick={() => handleFollowToggle(post.user._id)}
-                          className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors duration-200 ${
+                          className={`px-4 py-1.5 rounded-full cursor-pointer text-sm font-medium transition-colors duration-200 ${
                             followingStatus[post.user._id] ||
                             followingUsers.has(post.user._id)
                               ? "bg-gray-200 text-gray-700 hover:bg-gray-300"
@@ -831,7 +831,7 @@ const Home = () => {
                 <div className="flex items-center gap-6 pb-4 border-b border-gray-200">
                   <button
                     onClick={() => handleLikeToggle(post._id)}
-                    className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors duration-200 ${
+                    className={`inline-flex cursor-pointer items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors duration-200 ${
                       post.isLiked
                         ? "text-red-600 bg-red-50 hover:bg-red-100"
                         : "text-gray-600 bg-gray-100 hover:bg-gray-200"
@@ -855,7 +855,7 @@ const Home = () => {
 
                   <button
                     onClick={() => toggleComments(post._id)}
-                    className="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-600 font-medium rounded-lg transition-colors duration-200"
+                    className="inline-flex cursor-pointer items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-600 font-medium rounded-lg transition-colors duration-200"
                   >
                     <svg
                       className="w-5 h-5"
@@ -907,7 +907,7 @@ const Home = () => {
                         <button
                           onClick={() => handleCreateComment(post._id)}
                           disabled={!newComment[post._id]?.trim()}
-                          className="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                          className="inline-flex cursor-pointer items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                         >
                           <svg
                             className="w-4 h-4 mr-1"

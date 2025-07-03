@@ -149,7 +149,7 @@ const Profile = () => {
             localStorage.clear();
             navigate("/");
           }}
-          className="px-4 py-2 border border-red-300 text-red-700 bg-white hover:bg-red-50 font-medium rounded-lg flex items-center gap-2"
+          className="px-4 py-2 cursor-pointer border border-red-300 text-red-700 bg-white hover:bg-red-50 font-medium rounded-lg flex items-center gap-2"
         >
           <svg
             className="w-4 h-4"
@@ -190,9 +190,10 @@ const Profile = () => {
                 type="file"
                 accept="image/*"
                 onChange={(e) => handleProfilePicUpload(e.target.files[0])}
-                className="w-full"
+                className="block w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition duration-150"
               />
             </div>
+
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Bio
@@ -205,16 +206,16 @@ const Profile = () => {
               />
             </div>
 
-            <div className="flex gap-3">
+            <div className="flex gap-4 mt-4">
               <button
                 onClick={handleProfileUpdate}
-                className="px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                className="px-6 py-2.5 cursor-pointer bg-blue-600 text-white font-medium text-sm rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 transition duration-150"
               >
                 Save Changes
               </button>
               <button
                 onClick={() => setEditingProfile(false)}
-                className="px-5 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200"
+                className="px-6 py-2.5 cursor-pointer bg-gray-100 text-gray-800 font-medium text-sm rounded-md shadow-sm hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-1 transition duration-150"
               >
                 Cancel
               </button>
@@ -272,7 +273,7 @@ const Profile = () => {
             </div>
             <button
               onClick={() => setEditingProfile(true)}
-              className="inline-flex items-center px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-lg"
+              className="inline-flex cursor-pointer items-center px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-lg"
             >
               <svg
                 className="w-4 h-4 mr-2"
@@ -312,7 +313,7 @@ const Profile = () => {
           </nav>
         </div>
 
-        <div className="p-6">
+        <div className="p-6 ">
           {activeTab === "Posts" && (
             <div className="space-y-4">
               {myPosts.length === 0 ? (
