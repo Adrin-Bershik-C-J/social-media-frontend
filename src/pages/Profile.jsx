@@ -139,17 +139,22 @@ const Profile = () => {
 
   return (
     <div className="p-6 max-w-4xl mx-auto min-h-screen bg-gray-50">
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Profile</h1>
-          <p className="text-gray-600 mt-1">Manage your account and posts</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+            Profile
+          </h1>
+          <p className="text-sm sm:text-base text-gray-600 mt-1">
+            Manage your account and posts
+          </p>
         </div>
+
         <button
           onClick={() => {
             localStorage.clear();
             navigate("/");
           }}
-          className="px-4 py-2 cursor-pointer border border-red-300 text-red-700 bg-white hover:bg-red-50 font-medium rounded-lg flex items-center gap-2"
+          className="px-4 py-2 text-sm sm:text-base border border-red-300 text-red-700 bg-white hover:bg-red-50 font-medium rounded-lg flex items-center gap-2 transition-colors duration-200"
         >
           <svg
             className="w-4 h-4"
@@ -222,7 +227,8 @@ const Profile = () => {
             </div>
           </div>
         ) : (
-          <div className="flex items-start justify-between">
+          <div className="flex flex-col sm:flex-row items-start sm:items-start justify-between gap-4 sm:gap-6 mb-6">
+            {/* Left Side: Profile Picture + Info */}
             <div className="flex-1">
               <div className="flex items-center gap-4 mb-4">
                 {user.profilePicture ? (
@@ -238,19 +244,21 @@ const Profile = () => {
                   </div>
                 )}
 
-                <div>
-                  <h2 className="text-2xl font-bold text-gray-900">
+                <div className="min-w-0">
+                  <h2 className="text-xl sm:text-2xl font-bold text-gray-900 truncate">
                     {user.name}
                   </h2>
-                  <p className="text-gray-600">@{user.username}</p>
+                  <p className="text-gray-600 text-sm">@{user.username}</p>
                 </div>
               </div>
+
               {user.bio && (
-                <p className="text-gray-700 leading-relaxed mb-4 max-w-2xl">
+                <p className="text-gray-700 leading-relaxed mb-4 max-w-2xl text-sm sm:text-base">
                   {user.bio}
                 </p>
               )}
-              <div className="flex gap-6 text-sm">
+
+              <div className="flex flex-wrap gap-6 text-sm">
                 <div className="text-center">
                   <div className="font-bold text-xl text-gray-900">
                     {myPosts.length}
@@ -271,9 +279,11 @@ const Profile = () => {
                 </div>
               </div>
             </div>
+
+            {/* Right Side: Edit Button */}
             <button
               onClick={() => setEditingProfile(true)}
-              className="inline-flex cursor-pointer items-center px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-lg"
+              className="inline-flex items-center px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm sm:text-base font-medium rounded-lg self-start sm:self-auto"
             >
               <svg
                 className="w-4 h-4 mr-2"

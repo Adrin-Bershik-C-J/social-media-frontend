@@ -15,6 +15,7 @@ const Home = () => {
   const [replyText, setReplyText] = useState({}); // Store reply text by commentId
   const [showComments, setShowComments] = useState({}); // Toggle comments visibility
   const [showReplyForm, setShowReplyForm] = useState({}); // Toggle reply form visibility
+  const [showSuccess, setShowSuccess] = useState(false);
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
@@ -254,6 +255,8 @@ const Home = () => {
 
       // Refresh the feed
       fetchFeedPosts(1, true);
+      setShowSuccess(true);
+      setTimeout(() => setShowSuccess(false), 3000); // auto-hide after 3s
     } catch (err) {
       console.error("Error creating post:", err);
       alert("Failed to create post. Please try again.");
@@ -507,18 +510,26 @@ const Home = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {showSuccess && (
+        <div className="fixed top-5 left-1/2 transform -translate-x-1/2 bg-green-600 text-white px-4 py-2 rounded-lg shadow-lg z-50 transition-all duration-300">
+          Post uploaded successfully!
+        </div>
+      )}
+
       <div className="max-w-4xl mx-auto px-4 py-8">
         {/* Header */}
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Home Feed</h1>
-            <p className="text-gray-600 mt-1">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+              Home Feed
+            </h1>
+            <p className="text-sm sm:text-base text-gray-600 mt-1">
               Stay connected with your network
             </p>
           </div>
           <button
             onClick={() => navigate("/profile")}
-            className="inline-flex items-center cursor-pointer px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            className="inline-flex items-center cursor-pointer px-4 py-2 text-sm sm:text-base bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           >
             <svg
               className="w-4 h-4 mr-2"
@@ -629,13 +640,13 @@ const Home = () => {
               </div>
             )}
 
-            <div className="flex justify-end">
+            <div className="flex justify-center sm:justify-end mt-4">
               <button
                 type="submit"
                 disabled={
                   (!caption.trim() && selectedFiles.length === 0) || isUploading
                 }
-                className="inline-flex items-center px-6 py-3 cursor-pointer bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                className="w-full sm:w-auto inline-flex items-center justify-center px-5 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 text-sm"
               >
                 {isUploading ? (
                   <>
@@ -743,18 +754,18 @@ const Home = () => {
                       {post.user._id !== user._id && (
                         <button
                           onClick={() => handleFollowToggle(post.user._id)}
-                          className={`px-4 py-1.5 rounded-full cursor-pointer text-sm font-medium transition-colors duration-200 ${
-                            followingStatus[post.user._id] ||
-                            followingUsers.has(post.user._id)
-                              ? "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                              : "bg-blue-600 text-white hover:bg-blue-700"
-                          }`}
+                          className={`px-3 py-1 sm:px-4 sm:py-1.5 rounded-full cursor-pointer text-xs sm:text-sm font-medium transition-colors duration-200 flex items-center justify-center gap-1
+      ${
+        followingStatus[post.user._id] || followingUsers.has(post.user._id)
+          ? "bg-gray-200 text-gray-700 hover:bg-gray-300"
+          : "bg-blue-600 text-white hover:bg-blue-700"
+      }`}
                         >
                           {followingStatus[post.user._id] ||
                           followingUsers.has(post.user._id) ? (
                             <>
                               <svg
-                                className="w-4 h-4 inline mr-1"
+                                className="w-4 h-4 sm:w-5 sm:h-5"
                                 fill="none"
                                 stroke="currentColor"
                                 viewBox="0 0 24 24"
@@ -766,12 +777,14 @@ const Home = () => {
                                   d="M5 13l4 4L19 7"
                                 />
                               </svg>
-                              Following
+                              <span className="hidden xs:inline">
+                                Following
+                              </span>
                             </>
                           ) : (
                             <>
                               <svg
-                                className="w-4 h-4 inline mr-1"
+                                className="w-4 h-4 sm:w-5 sm:h-5"
                                 fill="none"
                                 stroke="currentColor"
                                 viewBox="0 0 24 24"
@@ -783,7 +796,7 @@ const Home = () => {
                                   d="M12 6v6m0 0v6m0-6h6m-6 0H6"
                                 />
                               </svg>
-                              Follow
+                              <span className="hidden xs:inline">Follow</span>
                             </>
                           )}
                         </button>
@@ -837,14 +850,15 @@ const Home = () => {
                 </div>
 
                 {/* Post Actions */}
-                <div className="flex items-center gap-6 pb-4 border-b border-gray-200">
+                <div className="flex flex-wrap items-center gap-3 sm:gap-6 pb-4 border-b border-gray-200">
                   <button
                     onClick={() => handleLikeToggle(post._id)}
-                    className={`inline-flex cursor-pointer items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors duration-200 ${
-                      post.isLiked
-                        ? "text-red-600 bg-red-50 hover:bg-red-100"
-                        : "text-gray-600 bg-gray-100 hover:bg-gray-200"
-                    }`}
+                    className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors duration-200 text-sm sm:text-base
+      ${
+        post.isLiked
+          ? "text-red-600 bg-red-50 hover:bg-red-100"
+          : "text-gray-600 bg-gray-100 hover:bg-gray-200"
+      }`}
                   >
                     <svg
                       className="w-5 h-5"
@@ -864,7 +878,7 @@ const Home = () => {
 
                   <button
                     onClick={() => toggleComments(post._id)}
-                    className="inline-flex cursor-pointer items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-600 font-medium rounded-lg transition-colors duration-200"
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-600 text-sm sm:text-base font-medium rounded-lg transition-colors duration-200"
                   >
                     <svg
                       className="w-5 h-5"
@@ -887,20 +901,21 @@ const Home = () => {
                 {showComments[post._id] && (
                   <div className="mt-6 space-y-4">
                     {/* Add Comment Form */}
-                    <div className="flex gap-3">
+                    <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
                       {user.profilePicture ? (
                         <img
                           src={user.profilePicture}
                           alt="User"
-                          className="w-12 h-12 rounded-full object-cover flex-shrink-0"
+                          className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover flex-shrink-0"
                         />
                       ) : (
-                        <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-lg font-bold flex-shrink-0">
+                        <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-base sm:text-lg font-bold flex-shrink-0">
                           {user.name?.charAt(0)?.toUpperCase() ||
                             user.username?.charAt(0)?.toUpperCase()}
                         </div>
                       )}
-                      <div className="flex-1 flex gap-3">
+
+                      <div className="w-full flex flex-col sm:flex-row gap-2 sm:gap-3 flex-1">
                         <input
                           type="text"
                           placeholder="Write a comment..."
@@ -911,12 +926,12 @@ const Home = () => {
                               [post._id]: e.target.value,
                             }))
                           }
-                          className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                          className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-sm"
                         />
                         <button
                           onClick={() => handleCreateComment(post._id)}
                           disabled={!newComment[post._id]?.trim()}
-                          className="inline-flex cursor-pointer items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                          className="inline-flex items-center justify-center px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 text-sm"
                         >
                           <svg
                             className="w-4 h-4 mr-1"

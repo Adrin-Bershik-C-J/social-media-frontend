@@ -142,14 +142,16 @@ const PostCard = ({
       <p className="text-sm text-gray-500 mb-4">
         {new Date(post.createdAt).toLocaleString("en-US")}
       </p>
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mt-4">
+        {/* Like Button */}
         <button
           onClick={onLike}
-          className={`inline-flex cursor-pointer items-center gap-2 px-3 py-2 rounded-lg font-medium transition-colors duration-200 ${
-            post.isLiked
-              ? "text-red-600 bg-red-50 hover:bg-red-100"
-              : "text-gray-600 bg-gray-100 hover:bg-gray-200"
-          }`}
+          className={`flex items-center justify-center gap-2 px-3 py-2 rounded-lg font-medium transition-colors duration-200 text-sm sm:text-base w-full sm:w-auto text-center
+    ${
+      post.isLiked
+        ? "text-red-600 bg-red-50 hover:bg-red-100"
+        : "text-gray-600 bg-gray-100 hover:bg-gray-200"
+    }`}
         >
           <svg
             className="w-5 h-5"
@@ -164,13 +166,16 @@ const PostCard = ({
               d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
             />
           </svg>
-          {post.likeCount} {post.likeCount === 1 ? "Like" : "Likes"}
+          <span className="whitespace-nowrap">
+            {post.likeCount} {post.likeCount === 1 ? "Like" : "Likes"}
+          </span>
         </button>
 
-        <div className="flex gap-2 mt-4">
+        {/* Edit & Delete Buttons */}
+        <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
           <button
             onClick={onEdit}
-            className="inline-flex cursor-pointer items-center px-3 py-2 text-blue-600 bg-blue-50 hover:bg-blue-100 font-medium rounded-lg transition-colors duration-200"
+            className="inline-flex items-center justify-center px-3 py-2 text-blue-600 bg-blue-50 hover:bg-blue-100 font-medium rounded-lg transition-colors duration-200 text-sm sm:text-base w-full sm:w-auto"
           >
             <svg
               className="w-4 h-4 mr-1"
@@ -195,7 +200,7 @@ const PostCard = ({
                 onDelete();
               }
             }}
-            className="inline-flex cursor-pointer items-center px-3 py-2 text-red-600 bg-red-50 hover:bg-red-100 font-medium rounded-lg transition-colors duration-200"
+            className="inline-flex items-center justify-center px-3 py-2 text-red-600 bg-red-50 hover:bg-red-100 font-medium rounded-lg transition-colors duration-200 text-sm sm:text-base w-full sm:w-auto"
           >
             <svg
               className="w-4 h-4 mr-1"
