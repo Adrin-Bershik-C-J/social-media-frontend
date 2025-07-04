@@ -3,6 +3,7 @@ import Register from "./pages/Register";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Profile from "./pages/Profile";
+import NotFound from "./pages/NotFound"; // 👈 import NotFound
 import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
@@ -27,6 +28,8 @@ function App() {
             </PrivateRoute>
           }
         />
+        {/* 👇 Catch-all route */}
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   );
