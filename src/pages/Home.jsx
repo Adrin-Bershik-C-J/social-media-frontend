@@ -97,9 +97,9 @@ const Home = () => {
         }
       })
       .filter(Boolean); // Remove null entries
-    console.log("Valid files:", validFiles);
-    console.log("typeof first file:", typeof validFiles[0]);
-    console.log("Instanceof File?", validFiles[0] instanceof File);
+    // console.log("Valid files:", validFiles);
+    // console.log("typeof first file:", typeof validFiles[0]);
+    // console.log("Instanceof File?", validFiles[0] instanceof File);
     setPreviews(newPreviews);
   };
 
@@ -107,8 +107,17 @@ const Home = () => {
     const newFiles = selectedFiles.filter((_, i) => i !== index);
     const newPreviews = previews.filter((_, i) => i !== index);
 
-    // Clean up object URLs
-    URL.revokeObjectURL(previews[index].url);
+    // Clean up object URL safely
+    try {
+      const revoke = (window.URL || window.webkitURL)?.revokeObjectURL;
+      if (typeof revoke === "function") {
+        revoke(previews[index].url);
+      } else {
+        console.warn("revokeObjectURL not supported.");
+      }
+    } catch (err) {
+      console.error("Failed to revoke object URL:", err);
+    }
 
     setSelectedFiles(newFiles);
     setPreviews(newPreviews);
@@ -969,7 +978,7 @@ const Home = () => {
                 <button
                   onClick={loadMorePosts}
                   disabled={loading}
-                  className="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                  className="inline-flex cursor-pointer items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                 >
                   {loading ? (
                     <>
