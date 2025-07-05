@@ -14,6 +14,7 @@ import {
 } from "../api/profile";
 import axios from "axios";
 import config from "../config";
+import Spinner from "../components/Spinner";
 const URL = config.API_URL;
 
 const Profile = () => {
@@ -27,6 +28,9 @@ const Profile = () => {
   const [activeTab, setActiveTab] = useState("Posts");
   const [followers, setFollowers] = useState([]);
   const [following, setFollowing] = useState([]);
+  const [loadingPosts, setLoadingPosts] = useState(false);
+  const [loadingFollowers, setLoadingFollowers] = useState(false);
+  const [loadingFollowing, setLoadingFollowing] = useState(false);
 
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
@@ -72,18 +76,24 @@ const Profile = () => {
   };
 
   const loadMyPosts = async () => {
+    setLoadingPosts(true);
     const res = await fetchMyPosts(token);
     setMyPosts(res.data);
+    setLoadingPosts(false);
   };
 
   const loadFollowers = async () => {
+    setLoadingFollowers(true);
     const res = await fetchFollowers(token);
     setFollowers(res.data);
+    setLoadingFollowers(false);
   };
 
   const loadFollowing = async () => {
+    setLoadingFollowing(true);
     const res = await fetchFollowing(token);
     setFollowing(res.data);
+    setLoadingFollowing(false);
   };
 
   const handleDelete = async (id) => {
@@ -323,10 +333,12 @@ const Profile = () => {
           </nav>
         </div>
 
-        <div className="p-6 ">
+        <div className="p-6">
           {activeTab === "Posts" && (
             <div className="space-y-4">
-              {myPosts.length === 0 ? (
+              {loadingPosts ? (
+                <Spinner />
+              ) : myPosts.length === 0 ? (
                 <div className="text-center py-12">
                   <svg
                     className="w-12 h-12 text-gray-400 mx-auto mb-4"
@@ -368,31 +380,41 @@ const Profile = () => {
             </div>
           )}
 
-          {activeTab === "Followers" &&
-            (followers.length === 0 ? (
-              <p className="text-gray-500 text-center py-4">
-                No followers yet.
-              </p>
-            ) : (
-              <div className="space-y-4">
-                {followers.map((f) => (
-                  <UserCard key={f._id} user={f} />
-                ))}
-              </div>
-            ))}
+          {activeTab === "Followers" && (
+            <>
+              {loadingFollowers ? (
+                <Spinner />
+              ) : followers.length === 0 ? (
+                <p className="text-gray-500 text-center py-4">
+                  No followers yet.
+                </p>
+              ) : (
+                <div className="space-y-4">
+                  {followers.map((f) => (
+                    <UserCard key={f._id} user={f} />
+                  ))}
+                </div>
+              )}
+            </>
+          )}
 
-          {activeTab === "Following" &&
-            (following.length === 0 ? (
-              <p className="text-gray-500 text-center py-4">
-                No following users yet.
-              </p>
-            ) : (
-              <div className="space-y-4">
-                {following.map((f) => (
-                  <UserCard key={f._id} user={f} />
-                ))}
-              </div>
-            ))}
+          {activeTab === "Following" && (
+            <>
+              {loadingFollowing ? (
+                <Spinner />
+              ) : following.length === 0 ? (
+                <p className="text-gray-500 text-center py-4">
+                  No following users yet.
+                </p>
+              ) : (
+                <div className="space-y-4">
+                  {following.map((f) => (
+                    <UserCard key={f._id} user={f} />
+                  ))}
+                </div>
+              )}
+            </>
+          )}
         </div>
       </div>
     </div>

@@ -16,6 +16,10 @@ const Home = () => {
   const [showComments, setShowComments] = useState({}); // Toggle comments visibility
   const [showReplyForm, setShowReplyForm] = useState({}); // Toggle reply form visibility
   const [showSuccess, setShowSuccess] = useState(false);
+  const [activeImages, setActiveImages] = useState([]);
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const [showImageModal, setShowImageModal] = useState(false);
+  const [commentLoading, setCommentLoading] = useState({});
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
@@ -209,12 +213,15 @@ const Home = () => {
   // Fetch comments for a specific post
   const fetchComments = async (postId) => {
     try {
+      setCommentLoading((prev) => ({ ...prev, [postId]: true }));
       const res = await axios.get(`${URL}/api/comments/${postId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setComments((prev) => ({ ...prev, [postId]: res.data }));
     } catch (err) {
       console.error("Error fetching comments:", err);
+    } finally {
+      setCommentLoading((prev) => ({ ...prev, [postId]: false }));
     }
   };
 
@@ -697,27 +704,27 @@ const Home = () => {
 
         {/* Posts Feed */}
         <div className="space-y-6">
-          {posts.length === 0 && !loading ? (
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-12 text-center">
+          {loading && posts.length === 0 ? (
+            <div className="flex justify-center items-center py-12">
               <svg
-                className="w-16 h-16 text-gray-400 mx-auto mb-4"
+                className="animate-spin h-10 w-10 text-blue-600"
                 fill="none"
-                stroke="currentColor"
                 viewBox="0 0 24 24"
               >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
                 <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.4 0 0 5.4 0 12h4z"
                 />
               </svg>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                No posts yet
-              </h3>
-              <p className="text-gray-500">
-                Follow some users or create your first post to get started!
-              </p>
             </div>
           ) : (
             posts.map((post) => (
@@ -815,7 +822,6 @@ const Home = () => {
                 </div>
 
                 {/* Post Content */}
-                {/* Post Content */}
                 <div className="mb-6">
                   <p className="text-gray-900 text-lg leading-relaxed">
                     {post.caption}
@@ -829,7 +835,12 @@ const Home = () => {
                           key={idx}
                           src={imgUrl}
                           alt={`Post image ${idx + 1}`}
-                          className="w-full h-48 object-cover rounded-xl"
+                          onClick={() => {
+                            setActiveImages(post.images);
+                            setActiveImageIndex(idx);
+                            setShowImageModal(true);
+                          }}
+                          className="w-full h-48 object-cover rounded-xl cursor-pointer hover:opacity-80 transition"
                         />
                       ))}
                     </div>
@@ -953,7 +964,30 @@ const Home = () => {
 
                     {/* Display Comments */}
                     <div className="space-y-3">
-                      {comments[post._id] && comments[post._id].length > 0 ? (
+                      {commentLoading[post._id] ? (
+                        <div className="flex justify-center py-6">
+                          <svg
+                            className="animate-spin h-6 w-6 text-blue-600"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                          >
+                            <circle
+                              className="opacity-25"
+                              cx="12"
+                              cy="12"
+                              r="10"
+                              stroke="currentColor"
+                              strokeWidth="4"
+                            />
+                            <path
+                              className="opacity-75"
+                              fill="currentColor"
+                              d="M4 12a8 8 0 018-8V0C5.4 0 0 5.4 0 12h4z"
+                            />
+                          </svg>
+                        </div>
+                      ) : comments[post._id] &&
+                        comments[post._id].length > 0 ? (
                         renderComments(comments[post._id], post._id)
                       ) : (
                         <div className="text-center py-8">
@@ -1058,6 +1092,39 @@ const Home = () => {
           )}
         </div>
       </div>
+      {showImageModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
+          <div className="relative max-w-3xl w-full flex flex-col items-center">
+            <img
+              src={activeImages[activeImageIndex]}
+              alt="Full view"
+              className="max-h-[80vh] w-auto rounded-xl"
+            />
+            <div className="flex justify-between mt-4 w-full px-6">
+              <button
+                disabled={activeImageIndex === 0}
+                onClick={() => setActiveImageIndex((i) => i - 1)}
+                className="text-white text-2xl disabled:opacity-30"
+              >
+                ⬅
+              </button>
+              <button
+                disabled={activeImageIndex === activeImages.length - 1}
+                onClick={() => setActiveImageIndex((i) => i + 1)}
+                className="text-white text-2xl disabled:opacity-30"
+              >
+                ➡
+              </button>
+            </div>
+            <button
+              onClick={() => setShowImageModal(false)}
+              className="absolute top-4 right-6 text-white text-xl"
+            >
+              ✖
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
