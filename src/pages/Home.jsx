@@ -22,6 +22,7 @@ const Home = () => {
   const [commentLoading, setCommentLoading] = useState({});
   const [followLoading, setFollowLoading] = useState({});
   const [likeLoading, setLikeLoading] = useState({});
+  const [commentLikeLoading, setCommentLikeLoading] = useState({});
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
@@ -345,16 +346,35 @@ const Home = () => {
 
   // Toggle comment like
   const handleCommentLike = async (commentId, postId) => {
+    setCommentLikeLoading((prev) => ({ ...prev, [commentId]: true }));
+
     try {
+      // Optimistic update
+      setComments((prev) => ({
+        ...prev,
+        [postId]: prev[postId].map((comment) => {
+          if (comment._id === commentId) {
+            const isLiked = comment.likes.includes(user._id);
+            return {
+              ...comment,
+              likes: isLiked
+                ? comment.likes.filter((id) => id !== user._id)
+                : [...comment.likes, user._id],
+            };
+          }
+          return comment;
+        }),
+      }));
+
       await axios.post(
         `${URL}/api/comments/like/${commentId}`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      // Refresh comments to get updated like count
-      fetchComments(postId);
     } catch (err) {
       console.error("Error liking comment:", err);
+    } finally {
+      setCommentLikeLoading((prev) => ({ ...prev, [commentId]: false }));
     }
   };
 
@@ -423,30 +443,52 @@ const Home = () => {
           <div className="flex items-center mt-3 gap-4">
             <button
               onClick={() => handleCommentLike(comment._id, postId)}
+              disabled={commentLikeLoading[comment._id]}
               className={`inline-flex cursor-pointer items-center gap-1 px-2 py-1 rounded-lg text-xs font-medium transition-colors duration-200 ${
                 comment.likes.includes(user._id)
                   ? "text-red-600 bg-red-50 hover:bg-red-100"
                   : "text-gray-600 bg-gray-100 hover:bg-gray-200"
-              }`}
+              } disabled:opacity-50 disabled:cursor-wait`}
             >
-              <svg
-                className="w-3 h-3"
-                fill={
-                  comment.likes.includes(user._id) ? "currentColor" : "none"
-                }
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                />
-              </svg>
+              {commentLikeLoading[comment._id] ? (
+                <svg
+                  className="animate-spin w-3 h-3 text-current"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  />
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.4 0 0 5.4 0 12h4z"
+                  />
+                </svg>
+              ) : (
+                <svg
+                  className="w-3 h-3"
+                  fill={
+                    comment.likes.includes(user._id) ? "currentColor" : "none"
+                  }
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                  />
+                </svg>
+              )}
               {comment.likes.length}
             </button>
-
             <button
               onClick={() =>
                 setShowReplyForm((prev) => ({
