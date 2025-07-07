@@ -20,6 +20,7 @@ const Home = () => {
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [showImageModal, setShowImageModal] = useState(false);
   const [commentLoading, setCommentLoading] = useState({});
+  const [followLoading, setFollowLoading] = useState({});
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
@@ -41,15 +42,25 @@ const Home = () => {
 
   // Initialize following status from user data
   useEffect(() => {
-    if (user && user.following) {
-      setFollowingUsers(new Set(user.following));
-      const initialStatus = {};
-      user.following.forEach((userId) => {
-        initialStatus[userId] = true;
-      });
-      setFollowingStatus(initialStatus);
-    }
-  }, [user]);
+    const fetchCurrentUserFollowings = async () => {
+      try {
+        const res = await axios.get(`${URL}/api/users/getHomeFollowers`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        const followingIds = res.data.following.map((u) => u._id);
+        const statusMap = {};
+        followingIds.forEach((id) => (statusMap[id] = true));
+
+        setFollowingUsers(new Set(followingIds));
+        setFollowingStatus(statusMap);
+      } catch (err) {
+        console.error("Failed to fetch user profile:", err);
+      }
+    };
+
+    if (isLoggedIn) fetchCurrentUserFollowings();
+  }, [isLoggedIn]);
 
   // Add these functions before your existing handleCreatePost function
   const handleFileSelect = (e) => {
@@ -173,6 +184,8 @@ const Home = () => {
 
   // Handle follow/unfollow
   const handleFollowToggle = async (targetUserId) => {
+    setFollowLoading((prev) => ({ ...prev, [targetUserId]: true }));
+
     try {
       const res = await axios.post(
         `${URL}/api/users/follow/${targetUserId}`,
@@ -180,13 +193,12 @@ const Home = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      // Update local state
+      // Update follow status
       setFollowingStatus((prev) => ({
         ...prev,
         [targetUserId]: res.data.isFollowing,
       }));
 
-      // Update following users set
       setFollowingUsers((prev) => {
         const newSet = new Set(prev);
         if (res.data.isFollowing) {
@@ -197,7 +209,7 @@ const Home = () => {
         return newSet;
       });
 
-      // Update posts to reflect new follow status
+      // Update follow status in posts
       setPosts((prevPosts) =>
         prevPosts.map((post) =>
           post.user._id === targetUserId
@@ -207,6 +219,8 @@ const Home = () => {
       );
     } catch (err) {
       console.error("Error toggling follow:", err);
+    } finally {
+      setFollowLoading((prev) => ({ ...prev, [targetUserId]: false }));
     }
   };
 
@@ -757,53 +771,46 @@ const Home = () => {
                           @{post.user.username}
                         </span>
                       </div>
+
                       {/* Follow/Unfollow Button */}
                       {post.user._id !== user._id && (
                         <button
                           onClick={() => handleFollowToggle(post.user._id)}
-                          className={`px-3 py-1 sm:px-4 sm:py-1.5 rounded-full cursor-pointer text-xs sm:text-sm font-medium transition-colors duration-200 flex items-center justify-center gap-1
+                          disabled={followLoading[post.user._id]}
+                          className={`px-3 py-1.5 rounded-full cursor-pointer text-xs sm:text-sm font-medium flex items-center gap-2
       ${
-        followingStatus[post.user._id] || followingUsers.has(post.user._id)
+        followingStatus[post.user._id]
           ? "bg-gray-200 text-gray-700 hover:bg-gray-300"
           : "bg-blue-600 text-white hover:bg-blue-700"
-      }`}
+      } disabled:opacity-60 disabled:cursor-wait`}
                         >
-                          {followingStatus[post.user._id] ||
-                          followingUsers.has(post.user._id) ? (
-                            <>
-                              <svg
-                                className="w-4 h-4 sm:w-5 sm:h-5"
-                                fill="none"
+                          {followLoading[post.user._id] ? (
+                            <svg
+                              className="animate-spin h-4 w-4 text-current"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                            >
+                              <circle
+                                className="opacity-25"
+                                cx="12"
+                                cy="12"
+                                r="10"
                                 stroke="currentColor"
-                                viewBox="0 0 24 24"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth={2}
-                                  d="M5 13l4 4L19 7"
-                                />
-                              </svg>
-                              <span className="hidden xs:inline">
-                                Following
-                              </span>
+                                strokeWidth="4"
+                              ></circle>
+                              <path
+                                className="opacity-75"
+                                fill="currentColor"
+                                d="M4 12a8 8 0 018-8V0C5.4 0 0 5.4 0 12h4z"
+                              />
+                            </svg>
+                          ) : followingStatus[post.user._id] ? (
+                            <>
+                              ✔️ <span>Following</span>
                             </>
                           ) : (
                             <>
-                              <svg
-                                className="w-4 h-4 sm:w-5 sm:h-5"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth={2}
-                                  d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                                />
-                              </svg>
-                              <span className="hidden xs:inline">Follow</span>
+                              ➕ <span>Follow</span>
                             </>
                           )}
                         </button>
