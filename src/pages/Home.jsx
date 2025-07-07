@@ -514,13 +514,13 @@ const Home = () => {
                     setEditingCommentId(comment._id);
                     setEditedCommentText(comment.text);
                   }}
-                  className="inline-flex items-center gap-1 px-2 py-1 text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg text-xs transition-colors duration-200"
+                  className="inline-flex cursor-pointer items-center gap-1 px-2 py-1 text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg text-xs transition-colors duration-200"
                 >
                   ✏️ Edit
                 </button>
                 <button
                   onClick={() => handleDeleteComment(postId, comment._id)}
-                  className="inline-flex items-center gap-1 px-2 py-1 text-red-600 bg-red-50 hover:bg-red-100 rounded-lg text-xs transition-colors duration-200"
+                  className="inline-flex cursor-pointer items-center gap-1 px-2 py-1 text-red-600 bg-red-50 hover:bg-red-100 rounded-lg text-xs transition-colors duration-200"
                 >
                   🗑️ Delete
                 </button>
@@ -530,7 +530,7 @@ const Home = () => {
             <button
               onClick={() => handleCommentLike(comment._id, postId)}
               disabled={commentLikeLoading[comment._id]}
-              className={`inline-flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-medium transition-colors duration-200 ${
+              className={`inline-flex cursor-pointer items-center gap-1 px-2 py-1 rounded-lg text-xs font-medium transition-colors duration-200 ${
                 comment.likes.includes(user._id)
                   ? "text-red-600 bg-red-50 hover:bg-red-100"
                   : "text-gray-600 bg-gray-100 hover:bg-gray-200"
@@ -583,7 +583,7 @@ const Home = () => {
                   [comment._id]: !prev[comment._id],
                 }))
               }
-              className="inline-flex items-center gap-1 px-2 py-1 text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg text-xs transition-colors duration-200"
+              className="inline-flex cursor-pointer items-center gap-1 px-2 py-1 text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg text-xs transition-colors duration-200"
             >
               <svg
                 className="w-3 h-3"
@@ -801,7 +801,7 @@ const Home = () => {
                 disabled={
                   (!caption.trim() && selectedFiles.length === 0) || isUploading
                 }
-                className="w-full sm:w-auto inline-flex items-center justify-center px-5 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 text-sm"
+                className="w-full sm:w-auto inline-flex cursor-pointer items-center justify-center px-5 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 text-sm"
               >
                 {isUploading ? (
                   <>
@@ -1036,7 +1036,7 @@ const Home = () => {
                   <button
                     onClick={() => handleLikeToggle(post._id)}
                     disabled={likeLoading[post._id]}
-                    className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors duration-200 text-sm sm:text-base
+                    className={`inline-flex cursor-pointer items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors duration-200 text-sm sm:text-base
     ${
       post.isLiked
         ? "text-red-600 bg-red-50 hover:bg-red-100"
@@ -1083,7 +1083,7 @@ const Home = () => {
 
                   <button
                     onClick={() => toggleComments(post._id)}
-                    className="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-600 text-sm sm:text-base font-medium rounded-lg transition-colors duration-200"
+                    className="inline-flex cursor-pointer items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-600 text-sm sm:text-base font-medium rounded-lg transition-colors duration-200"
                   >
                     <svg
                       className="w-5 h-5"
@@ -1136,7 +1136,7 @@ const Home = () => {
                         <button
                           onClick={() => handleCreateComment(post._id)}
                           disabled={!newComment[post._id]?.trim()}
-                          className="inline-flex items-center justify-center px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 text-sm"
+                          className="inline-flex cursor-pointer items-center justify-center px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 text-sm"
                         >
                           <svg
                             className="w-4 h-4 mr-1"

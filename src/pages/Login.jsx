@@ -213,14 +213,14 @@ const Login = () => {
           </Formik>
 
           {/* Forgot Link */}
-          <div className="mt-6 text-center">
+          {/* <div className="mt-6 text-center">
             <a
               href="#"
               className="text-sm text-blue-600 hover:text-blue-800 font-medium"
             >
               Forgot your password?
             </a>
-          </div>
+          </div> */}
         </div>
 
         {/* Register Link */}

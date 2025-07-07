@@ -178,13 +178,13 @@ const CommentsSection = ({ postId }) => {
                     <button
                       onClick={() => handleEditComment(comment._id)}
                       disabled={editLoading[comment._id]}
-                      className="bg-green-600 text-white px-2 sm:px-3 py-1 rounded-lg text-xs sm:text-sm flex-shrink-0"
+                      className="bg-green-600 cursor-pointer text-white px-2 sm:px-3 py-1 rounded-lg text-xs sm:text-sm flex-shrink-0"
                     >
                       {editLoading[comment._id] ? "Saving..." : "Save"}
                     </button>
                     <button
                       onClick={cancelEdit}
-                      className="bg-gray-300 text-gray-800 px-2 sm:px-3 py-1 rounded-lg text-xs sm:text-sm flex-shrink-0"
+                      className="bg-gray-300 cursor-pointer text-gray-800 px-2 sm:px-3 py-1 rounded-lg text-xs sm:text-sm flex-shrink-0"
                     >
                       Cancel
                     </button>
@@ -199,7 +199,7 @@ const CommentsSection = ({ postId }) => {
                   <div className="flex items-center mt-2 gap-2 sm:gap-4 text-xs flex-wrap">
                     <button
                       onClick={() => handleCommentLike(comment._id)}
-                      className={`inline-flex items-center gap-1 px-2 py-1 rounded-lg font-medium transition-colors duration-200 flex-shrink-0 ${
+                      className={`inline-flex cursor-pointer items-center gap-1 px-2 py-1 rounded-lg font-medium transition-colors duration-200 flex-shrink-0 ${
                         comment.likes.includes(user.id)
                           ? "text-red-600 bg-red-50 hover:bg-red-100"
                           : "text-gray-600 bg-gray-100 hover:bg-gray-200"
@@ -238,7 +238,7 @@ const CommentsSection = ({ postId }) => {
                           [comment._id]: !prev[comment._id],
                         }))
                       }
-                      className="text-blue-600 hover:underline flex-shrink-0"
+                      className="text-blue-600 cursor-pointer hover:underline flex-shrink-0"
                     >
                       Reply
                     </button>
@@ -247,13 +247,13 @@ const CommentsSection = ({ postId }) => {
                       <>
                         <button
                           onClick={() => startEditing(comment._id, comment.text)}
-                          className="text-blue-600 hover:underline flex-shrink-0"
+                          className="text-blue-600 cursor-pointer hover:underline flex-shrink-0"
                         >
                           Edit
                         </button>
                         <button
                           onClick={() => handleDeleteComment(comment._id)}
-                          className="text-red-600 hover:underline flex-shrink-0"
+                          className="text-red-600 cursor-pointer hover:underline flex-shrink-0"
                         >
                           {deleteLoading[comment._id] ? "Deleting..." : "Delete"}
                         </button>
@@ -319,7 +319,7 @@ const CommentsSection = ({ postId }) => {
     <div className="mt-4 sm:mt-6">
       <button
         onClick={handleToggleComments}
-        className="mb-3 sm:mb-4 px-3 sm:px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs sm:text-sm rounded-lg w-full sm:w-auto"
+        className="mb-3 sm:mb-4 px-3 cursor-pointer sm:px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs sm:text-sm rounded-lg w-full sm:w-auto"
       >
         {showComments ? "Hide Comments" : "Show Comments"}
       </button>

@@ -153,7 +153,7 @@ const PostCard = ({
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mt-4">
         <button
           onClick={onLike}
-          className={`flex items-center justify-center gap-2 px-3 py-2 rounded-lg font-medium transition-colors duration-200 text-sm sm:text-base w-full sm:w-auto text-center ${
+          className={`flex cursor-pointer items-center justify-center gap-2 px-3 py-2 rounded-lg font-medium transition-colors duration-200 text-sm sm:text-base w-full sm:w-auto text-center ${
             post.isLiked
               ? "text-red-600 bg-red-50 hover:bg-red-100"
               : "text-gray-600 bg-gray-100 hover:bg-gray-200"
@@ -180,7 +180,7 @@ const PostCard = ({
         <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
           <button
             onClick={onEdit}
-            className="inline-flex items-center justify-center px-3 py-2 text-blue-600 bg-blue-50 hover:bg-blue-100 font-medium rounded-lg transition-colors duration-200 text-sm sm:text-base w-full sm:w-auto"
+            className="inline-flex cursor-pointer items-center justify-center px-3 py-2 text-blue-600 bg-blue-50 hover:bg-blue-100 font-medium rounded-lg transition-colors duration-200 text-sm sm:text-base w-full sm:w-auto"
           >
             ✏️ Edit
           </button>
@@ -192,7 +192,7 @@ const PostCard = ({
                 onDelete();
               }
             }}
-            className="inline-flex items-center justify-center px-3 py-2 text-red-600 bg-red-50 hover:bg-red-100 font-medium rounded-lg transition-colors duration-200 text-sm sm:text-base w-full sm:w-auto"
+            className="inline-flex cursor-pointer items-center justify-center px-3 py-2 text-red-600 bg-red-50 hover:bg-red-100 font-medium rounded-lg transition-colors duration-200 text-sm sm:text-base w-full sm:w-auto"
           >
             🗑️ Delete
           </button>
