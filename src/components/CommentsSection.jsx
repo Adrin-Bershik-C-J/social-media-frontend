@@ -139,34 +139,38 @@ const CommentsSection = ({ postId }) => {
     return filtered.map((comment) => (
       <div
         key={comment._id}
-        className={`mt-4 ${depth > 0 ? "ml-6 border-l border-blue-100 pl-4" : ""}`}
+        className={`mt-3 sm:mt-4 ${
+          depth > 0 
+            ? "ml-3 sm:ml-4 md:ml-6 border-l border-blue-100 pl-2 sm:pl-3 md:pl-4" 
+            : ""
+        }`}
       >
-        <div className="bg-gray-50 border rounded-xl p-3">
-          <div className="flex items-start gap-3">
+        <div className="bg-gray-50 border rounded-xl p-2 sm:p-3">
+          <div className="flex items-start gap-2 sm:gap-3">
             {comment.user.profilePicture ? (
               <img
                 src={comment.user.profilePicture}
                 alt="User"
-                className="w-8 h-8 rounded-full object-cover"
+                className="w-6 h-6 sm:w-8 sm:h-8 rounded-full object-cover flex-shrink-0"
               />
             ) : (
-              <div className="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold">
+              <div className="w-6 h-6 sm:w-8 sm:h-8 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs sm:text-sm font-bold flex-shrink-0">
                 {comment.user.name?.charAt(0).toUpperCase() ||
                   comment.user.username?.charAt(0).toUpperCase()}
               </div>
             )}
 
-            <div className="flex-1">
-              <div className="flex gap-2 text-sm font-semibold">
-                <p>{comment.user.name}</p>
-                <span className="text-gray-400">@{comment.user.username}</span>
+            <div className="flex-1 min-w-0">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:gap-2 text-xs sm:text-sm">
+                <p className="font-semibold truncate">{comment.user.name}</p>
+                <span className="text-gray-400 text-xs">@{comment.user.username}</span>
               </div>
 
               {editingCommentId === comment._id ? (
                 <div className="mt-2">
                   <textarea
-                    rows={2}
-                    className="w-full border px-3 py-2 rounded-lg text-sm"
+                    rows={3}
+                    className="w-full border px-2 sm:px-3 py-2 rounded-lg text-xs sm:text-sm resize-none"
                     value={editedText}
                     onChange={(e) => setEditedText(e.target.value)}
                   />
@@ -174,13 +178,13 @@ const CommentsSection = ({ postId }) => {
                     <button
                       onClick={() => handleEditComment(comment._id)}
                       disabled={editLoading[comment._id]}
-                      className="bg-green-600 text-white px-3 py-1 rounded-lg text-sm"
+                      className="bg-green-600 text-white px-2 sm:px-3 py-1 rounded-lg text-xs sm:text-sm flex-shrink-0"
                     >
                       {editLoading[comment._id] ? "Saving..." : "Save"}
                     </button>
                     <button
                       onClick={cancelEdit}
-                      className="bg-gray-300 text-gray-800 px-3 py-1 rounded-lg text-sm"
+                      className="bg-gray-300 text-gray-800 px-2 sm:px-3 py-1 rounded-lg text-xs sm:text-sm flex-shrink-0"
                     >
                       Cancel
                     </button>
@@ -188,12 +192,14 @@ const CommentsSection = ({ postId }) => {
                 </div>
               ) : (
                 <>
-                  <p className="text-sm text-gray-800 mt-1">{comment.text}</p>
+                  <p className="text-xs sm:text-sm text-gray-800 mt-1 break-words">
+                    {comment.text}
+                  </p>
 
-                  <div className="flex items-center mt-2 gap-4 text-xs flex-wrap">
+                  <div className="flex items-center mt-2 gap-2 sm:gap-4 text-xs flex-wrap">
                     <button
                       onClick={() => handleCommentLike(comment._id)}
-                      className={`inline-flex items-center gap-1 px-2 py-1 rounded-lg font-medium transition-colors duration-200 ${
+                      className={`inline-flex items-center gap-1 px-2 py-1 rounded-lg font-medium transition-colors duration-200 flex-shrink-0 ${
                         comment.likes.includes(user.id)
                           ? "text-red-600 bg-red-50 hover:bg-red-100"
                           : "text-gray-600 bg-gray-100 hover:bg-gray-200"
@@ -204,7 +210,7 @@ const CommentsSection = ({ postId }) => {
                       ) : (
                         <>
                           <svg
-                            className="w-3 h-3"
+                            className="w-3 h-3 flex-shrink-0"
                             fill={
                               comment.likes.includes(user.id)
                                 ? "currentColor"
@@ -220,7 +226,7 @@ const CommentsSection = ({ postId }) => {
                               d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
                             />
                           </svg>
-                          {comment.likes.length}
+                          <span className="min-w-0">{comment.likes.length}</span>
                         </>
                       )}
                     </button>
@@ -232,7 +238,7 @@ const CommentsSection = ({ postId }) => {
                           [comment._id]: !prev[comment._id],
                         }))
                       }
-                      className="text-blue-600 hover:underline"
+                      className="text-blue-600 hover:underline flex-shrink-0"
                     >
                       Reply
                     </button>
@@ -241,13 +247,13 @@ const CommentsSection = ({ postId }) => {
                       <>
                         <button
                           onClick={() => startEditing(comment._id, comment.text)}
-                          className="text-blue-600 hover:underline"
+                          className="text-blue-600 hover:underline flex-shrink-0"
                         >
                           Edit
                         </button>
                         <button
                           onClick={() => handleDeleteComment(comment._id)}
-                          className="text-red-600 hover:underline"
+                          className="text-red-600 hover:underline flex-shrink-0"
                         >
                           {deleteLoading[comment._id] ? "Deleting..." : "Delete"}
                         </button>
@@ -258,9 +264,9 @@ const CommentsSection = ({ postId }) => {
               )}
 
               {showReplyForm[comment._id] && (
-                <div className="mt-2 flex gap-2">
-                  <input
-                    type="text"
+                <div className="mt-2 space-y-2">
+                  <textarea
+                    rows={2}
                     value={replyText[comment._id] || ""}
                     onChange={(e) =>
                       setReplyText((prev) => ({
@@ -268,15 +274,28 @@ const CommentsSection = ({ postId }) => {
                         [comment._id]: e.target.value,
                       }))
                     }
-                    className="flex-1 border px-3 py-2 rounded-lg text-sm"
+                    className="w-full border px-2 sm:px-3 py-2 rounded-lg text-xs sm:text-sm resize-none"
                     placeholder="Write a reply..."
                   />
-                  <button
-                    onClick={() => handleCreateComment(comment._id)}
-                    className="bg-blue-600 text-white px-3 py-2 rounded-lg text-sm"
-                  >
-                    Reply
-                  </button>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => handleCreateComment(comment._id)}
+                      className="bg-blue-600 text-white px-2 sm:px-3 py-1 sm:py-2 rounded-lg text-xs sm:text-sm flex-shrink-0"
+                    >
+                      Reply
+                    </button>
+                    <button
+                      onClick={() =>
+                        setShowReplyForm((prev) => ({
+                          ...prev,
+                          [comment._id]: false,
+                        }))
+                      }
+                      className="bg-gray-300 text-gray-800 px-2 sm:px-3 py-1 sm:py-2 rounded-lg text-xs sm:text-sm flex-shrink-0"
+                    >
+                      Cancel
+                    </button>
+                  </div>
                 </div>
               )}
             </div>
@@ -297,53 +316,61 @@ const CommentsSection = ({ postId }) => {
   };
 
   return (
-    <div className="mt-6">
+    <div className="mt-4 sm:mt-6">
       <button
         onClick={handleToggleComments}
-        className="mb-4 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 text-sm rounded-lg"
+        className="mb-3 sm:mb-4 px-3 sm:px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs sm:text-sm rounded-lg w-full sm:w-auto"
       >
         {showComments ? "Hide Comments" : "Show Comments"}
       </button>
 
       {showComments && (
-        <>
-          <div className="flex gap-3 mb-4">
+        <div className="space-y-4">
+          {/* Comment input section */}
+          <div className="flex gap-2 sm:gap-3">
             {user.profilePicture ? (
               <img
                 src={user.profilePicture}
                 alt="User"
-                className="w-10 h-10 rounded-full object-cover"
+                className="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover flex-shrink-0"
               />
             ) : (
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-sm font-bold">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-xs sm:text-sm font-bold flex-shrink-0">
                 {user.name?.charAt(0).toUpperCase() ||
                   user.username?.charAt(0).toUpperCase()}
               </div>
             )}
-            <input
-              type="text"
-              value={newComment}
-              onChange={(e) => setNewComment(e.target.value)}
-              className="flex-1 border px-4 py-2 rounded-lg text-sm"
-              placeholder="Write a comment..."
-            />
-            <button
-              onClick={() => handleCreateComment()}
-              disabled={!newComment.trim()}
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm"
-            >
-              Comment
-            </button>
+            <div className="flex-1 flex flex-col sm:flex-row gap-2">
+              <textarea
+                rows={2}
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+                className="flex-1 border px-2 sm:px-4 py-2 rounded-lg text-xs sm:text-sm resize-none"
+                placeholder="Write a comment..."
+              />
+              <button
+                onClick={() => handleCreateComment()}
+                disabled={!newComment.trim()}
+                className="bg-blue-600 text-white px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
+              >
+                Comment
+              </button>
+            </div>
           </div>
 
+          {/* Comments display */}
           {loading ? (
-            <Spinner />
+            <div className="flex justify-center py-4">
+              <Spinner />
+            </div>
           ) : comments.length === 0 ? (
-            <p className="text-sm text-gray-500">No comments yet. Be the first!</p>
+            <p className="text-xs sm:text-sm text-gray-500 text-center py-4">
+              No comments yet. Be the first!
+            </p>
           ) : (
-            <div className="space-y-4">{renderComments()}</div>
+            <div className="space-y-2 sm:space-y-4">{renderComments()}</div>
           )}
-        </>
+        </div>
       )}
     </div>
   );

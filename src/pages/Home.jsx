@@ -881,29 +881,51 @@ const Home = () => {
                 className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6"
               >
                 {/* Post Header */}
-                <div className="flex items-start gap-4 mb-4">
+                <div className="flex items-start gap-3 sm:gap-4 mb-4">
                   {post.user.profilePicture ? (
                     <img
                       src={post.user.profilePicture}
                       alt="User"
-                      className="w-12 h-12 rounded-full object-cover flex-shrink-0"
+                      className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover flex-shrink-0"
                     />
                   ) : (
-                    <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-blue-600 rounded-full flex items-center justify-center text-white text-lg font-bold flex-shrink-0">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-green-500 to-blue-600 rounded-full flex items-center justify-center text-white text-base sm:text-lg font-bold flex-shrink-0">
                       {post.user.name?.charAt(0)?.toUpperCase() ||
                         post.user.username?.charAt(0)?.toUpperCase()}
                     </div>
                   )}
 
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2 mb-1">
-                        <h3 className="font-semibold text-gray-900">
-                          {post.user.name}
-                        </h3>
-                        <span className="text-gray-500">
-                          @{post.user.username}
-                        </span>
+                    {/* User Info and Follow Button Container */}
+                    <div className="flex items-start justify-between gap-2 mb-1">
+                      <div className="flex-1 min-w-0">
+                        {/* User Names */}
+                        <div className="flex items-center gap-1 sm:gap-2 mb-1 flex-wrap">
+                          <h3 className="font-semibold text-gray-900 text-sm sm:text-base truncate">
+                            {post.user.name}
+                          </h3>
+                          <span className="text-gray-500 text-xs sm:text-sm truncate">
+                            @{post.user.username}
+                          </span>
+                        </div>
+
+                        {/* Date - Hidden on mobile when follow button is present */}
+                        <p
+                          className={`text-xs sm:text-sm text-gray-500 ${
+                            post.user._id !== user._id ? "hidden sm:block" : ""
+                          }`}
+                        >
+                          {new Date(post.createdAt).toLocaleDateString(
+                            "en-US",
+                            {
+                              year: "numeric",
+                              month: "long",
+                              day: "numeric",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            }
+                          )}
+                        </p>
                       </div>
 
                       {/* Follow/Unfollow Button */}
@@ -911,16 +933,16 @@ const Home = () => {
                         <button
                           onClick={() => handleFollowToggle(post.user._id)}
                           disabled={followLoading[post.user._id]}
-                          className={`px-3 py-1.5 rounded-full cursor-pointer text-xs sm:text-sm font-medium flex items-center gap-2
-      ${
-        followingStatus[post.user._id]
-          ? "bg-gray-200 text-gray-700 hover:bg-gray-300"
-          : "bg-blue-600 text-white hover:bg-blue-700"
-      } disabled:opacity-60 disabled:cursor-wait`}
+                          className={`px-2 py-1 sm:px-3 sm:py-1.5 rounded-full cursor-pointer text-xs font-medium flex items-center gap-1 sm:gap-2 flex-shrink-0 whitespace-nowrap
+            ${
+              followingStatus[post.user._id]
+                ? "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                : "bg-blue-600 text-white hover:bg-blue-700"
+            } disabled:opacity-60 disabled:cursor-wait`}
                         >
                           {followLoading[post.user._id] ? (
                             <svg
-                              className="animate-spin h-4 w-4 text-current"
+                              className="animate-spin h-3 w-3 sm:h-4 sm:w-4 text-current"
                               viewBox="0 0 24 24"
                               fill="none"
                             >
@@ -940,28 +962,35 @@ const Home = () => {
                             </svg>
                           ) : followingStatus[post.user._id] ? (
                             <>
-                              ✔️ <span>Following</span>
+                              <span className="text-xs">✔️</span>
+                              <span className="hidden sm:inline">
+                                Following
+                              </span>
                             </>
                           ) : (
                             <>
-                              ➕ <span>Follow</span>
+                              <span className="text-xs">➕</span>
+                              <span className="hidden sm:inline">Follow</span>
                             </>
                           )}
                         </button>
                       )}
                     </div>
-                    <p className="text-sm text-gray-500">
-                      {new Date(post.createdAt).toLocaleDateString("en-US", {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                    </p>
+
+                    {/* Date - Shown on mobile when follow button is present */}
+                    {post.user._id !== user._id && (
+                      <p className="text-xs text-gray-500 sm:hidden">
+                        {new Date(post.createdAt).toLocaleDateString("en-US", {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </p>
+                    )}
                   </div>
                 </div>
-
                 {/* Post Content */}
                 <div className="mb-6">
                   <p className="text-gray-900 text-lg leading-relaxed">
