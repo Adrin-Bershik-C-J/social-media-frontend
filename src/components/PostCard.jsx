@@ -1,5 +1,6 @@
 // src/components/PostCard.jsx
 import React from "react";
+import CommentsSection from "./CommentsSection";
 
 const PostCard = ({
   post,
@@ -15,7 +16,6 @@ const PostCard = ({
   if (isEditing) {
     return (
       <div className="bg-gray-50 rounded-xl p-6 border border-gray-200 space-y-4">
-        {/* Header same as view mode */}
         <div className="flex items-center gap-3 mb-4">
           {post.user?.profilePicture ? (
             <img
@@ -35,7 +35,6 @@ const PostCard = ({
           </div>
         </div>
 
-        {/* Editable Caption */}
         <textarea
           rows={4}
           className="w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -44,7 +43,6 @@ const PostCard = ({
           placeholder="Edit your caption..."
         />
 
-        {/* Action Buttons */}
         <div className="flex gap-2 mt-4">
           <button
             onClick={saveEdit}
@@ -110,10 +108,10 @@ const PostCard = ({
           <p className="text-sm text-gray-500">@{post.user?.username}</p>
         </div>
       </div>
-      {/* Media (images/videos) */}
+      <p className="text-lg text-gray-900 mb-3">{post.caption}</p>
+
       {(post.images?.length > 0 || post.video) && (
         <div className="mb-4 space-y-4">
-          {/* Images Grid */}
           {post.images?.length > 0 && (
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               {post.images.map((imgUrl, idx) => (
@@ -127,7 +125,6 @@ const PostCard = ({
             </div>
           )}
 
-          {/* Single Video */}
           {post.video && (
             <video
               controls
@@ -138,20 +135,18 @@ const PostCard = ({
         </div>
       )}
 
-      <p className="text-lg text-gray-900 mb-3">{post.caption}</p>
       <p className="text-sm text-gray-500 mb-4">
         {new Date(post.createdAt).toLocaleString("en-US")}
       </p>
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mt-4">
-        {/* Like Button */}
         <button
           onClick={onLike}
           className={`flex items-center justify-center gap-2 px-3 py-2 rounded-lg font-medium transition-colors duration-200 text-sm sm:text-base w-full sm:w-auto text-center
-    ${
-      post.isLiked
-        ? "text-red-600 bg-red-50 hover:bg-red-100"
-        : "text-gray-600 bg-gray-100 hover:bg-gray-200"
-    }`}
+          ${
+            post.isLiked
+              ? "text-red-600 bg-red-50 hover:bg-red-100"
+              : "text-gray-600 bg-gray-100 hover:bg-gray-200"
+          }`}
         >
           <svg
             className="w-5 h-5"
@@ -171,7 +166,6 @@ const PostCard = ({
           </span>
         </button>
 
-        {/* Edit & Delete Buttons */}
         <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
           <button
             onClick={onEdit}
@@ -219,6 +213,9 @@ const PostCard = ({
           </button>
         </div>
       </div>
+
+      {/* Comments Section */}
+      <CommentsSection postId={post._id} />
     </div>
   );
 };
