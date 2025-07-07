@@ -1,5 +1,5 @@
 // src/components/PostCard.jsx
-import React from "react";
+import React, { useState } from "react";
 import CommentsSection from "./CommentsSection";
 
 const PostCard = ({
@@ -13,6 +13,9 @@ const PostCard = ({
   saveEdit,
   cancelEdit,
 }) => {
+  const [activeImages, setActiveImages] = useState([]);
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const [showImageModal, setShowImageModal] = useState(false);
   if (isEditing) {
     return (
       <div className="bg-gray-50 rounded-xl p-6 border border-gray-200 space-y-4">
@@ -90,6 +93,7 @@ const PostCard = ({
 
   return (
     <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
+      {/* User Info */}
       <div className="flex items-center gap-3 mb-4">
         {post.user?.profilePicture ? (
           <img
@@ -108,8 +112,10 @@ const PostCard = ({
           <p className="text-sm text-gray-500">@{post.user?.username}</p>
         </div>
       </div>
+
       <p className="text-lg text-gray-900 mb-3">{post.caption}</p>
 
+      {/* Media Display */}
       {(post.images?.length > 0 || post.video) && (
         <div className="mb-4 space-y-4">
           {post.images?.length > 0 && (
@@ -119,12 +125,16 @@ const PostCard = ({
                   key={idx}
                   src={imgUrl}
                   alt={`Post image ${idx + 1}`}
-                  className="w-full h-48 object-cover rounded-lg"
+                  onClick={() => {
+                    setActiveImages(post.images);
+                    setActiveImageIndex(idx);
+                    setShowImageModal(true);
+                  }}
+                  className="w-full h-48 object-cover rounded-lg cursor-pointer hover:opacity-80 transition"
                 />
               ))}
             </div>
           )}
-
           {post.video && (
             <video
               controls
@@ -138,11 +148,12 @@ const PostCard = ({
       <p className="text-sm text-gray-500 mb-4">
         {new Date(post.createdAt).toLocaleString("en-US")}
       </p>
+
+      {/* Action Buttons */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mt-4">
         <button
           onClick={onLike}
-          className={`flex items-center justify-center gap-2 px-3 py-2 rounded-lg font-medium transition-colors duration-200 text-sm sm:text-base w-full sm:w-auto text-center
-          ${
+          className={`flex items-center justify-center gap-2 px-3 py-2 rounded-lg font-medium transition-colors duration-200 text-sm sm:text-base w-full sm:w-auto text-center ${
             post.isLiked
               ? "text-red-600 bg-red-50 hover:bg-red-100"
               : "text-gray-600 bg-gray-100 hover:bg-gray-200"
@@ -171,20 +182,7 @@ const PostCard = ({
             onClick={onEdit}
             className="inline-flex items-center justify-center px-3 py-2 text-blue-600 bg-blue-50 hover:bg-blue-100 font-medium rounded-lg transition-colors duration-200 text-sm sm:text-base w-full sm:w-auto"
           >
-            <svg
-              className="w-4 h-4 mr-1"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-              />
-            </svg>
-            Edit
+            ✏️ Edit
           </button>
           <button
             onClick={() => {
@@ -196,26 +194,48 @@ const PostCard = ({
             }}
             className="inline-flex items-center justify-center px-3 py-2 text-red-600 bg-red-50 hover:bg-red-100 font-medium rounded-lg transition-colors duration-200 text-sm sm:text-base w-full sm:w-auto"
           >
-            <svg
-              className="w-4 h-4 mr-1"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-              />
-            </svg>
-            Delete
+            🗑️ Delete
           </button>
         </div>
       </div>
 
-      {/* Comments Section */}
+      {/* Comments */}
       <CommentsSection postId={post._id} />
+
+      {/* Image Modal */}
+      {showImageModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
+          <div className="relative max-w-3xl w-full flex flex-col items-center">
+            <img
+              src={activeImages[activeImageIndex]}
+              alt="Full view"
+              className="max-h-[80vh] w-auto rounded-xl"
+            />
+            <div className="flex justify-between mt-4 w-full px-6">
+              <button
+                disabled={activeImageIndex === 0}
+                onClick={() => setActiveImageIndex((i) => i - 1)}
+                className="text-white text-2xl disabled:opacity-30"
+              >
+                ⬅
+              </button>
+              <button
+                disabled={activeImageIndex === activeImages.length - 1}
+                onClick={() => setActiveImageIndex((i) => i + 1)}
+                className="text-white text-2xl disabled:opacity-30"
+              >
+                ➡
+              </button>
+            </div>
+            <button
+              onClick={() => setShowImageModal(false)}
+              className="absolute top-4 right-6 text-white text-xl"
+            >
+              ✖
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
