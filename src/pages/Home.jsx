@@ -23,6 +23,8 @@ const Home = () => {
   const [followLoading, setFollowLoading] = useState({});
   const [likeLoading, setLikeLoading] = useState({});
   const [commentLikeLoading, setCommentLikeLoading] = useState({});
+  const [editingCommentId, setEditingCommentId] = useState(null);
+  const [editedCommentText, setEditedCommentText] = useState("");
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
@@ -181,6 +183,41 @@ const Home = () => {
   const loadMorePosts = () => {
     if (hasMore && !loading) {
       fetchFeedPosts(currentPage + 1, false);
+    }
+  };
+
+  const handleEditComment = async (postId, commentId) => {
+    if (!editedCommentText.trim()) return;
+
+    try {
+      await axios.put(
+        `${URL}/api/comments/${commentId}`,
+        { text: editedCommentText },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      // Refresh comments
+      fetchComments(postId);
+      setEditingCommentId(null);
+      setEditedCommentText("");
+    } catch (err) {
+      console.error("Error editing comment:", err);
+    }
+  };
+
+  const handleDeleteComment = async (postId, commentId) => {
+    if (!window.confirm("Are you sure you want to delete this comment?"))
+      return;
+
+    try {
+      await axios.delete(`${URL}/api/comments/${commentId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      // Refresh comments
+      fetchComments(postId);
+    } catch (err) {
+      console.error("Error deleting comment:", err);
     }
   };
 
@@ -426,9 +463,38 @@ const Home = () => {
                   @{comment.user.username}
                 </p>
               </div>
-              <p className="text-gray-800 text-sm leading-relaxed mb-2">
-                {comment.text}
-              </p>
+              {editingCommentId === comment._id ? (
+                <div className="flex flex-col gap-2 mb-2">
+                  <input
+                    type="text"
+                    value={editedCommentText}
+                    onChange={(e) => setEditedCommentText(e.target.value)}
+                    className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                  />
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => handleEditComment(postId, comment._id)}
+                      className="px-3 py-1 bg-green-600 text-white text-sm rounded-lg"
+                    >
+                      Save
+                    </button>
+                    <button
+                      onClick={() => {
+                        setEditingCommentId(null);
+                        setEditedCommentText("");
+                      }}
+                      className="px-3 py-1 bg-gray-300 text-gray-800 text-sm rounded-lg"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <p className="text-gray-800 text-sm leading-relaxed mb-2">
+                  {comment.text}
+                </p>
+              )}
+
               <p className="text-xs text-gray-500">
                 {new Date(comment.createdAt).toLocaleDateString("en-US", {
                   month: "short",
@@ -440,11 +506,31 @@ const Home = () => {
             </div>
           </div>
 
-          <div className="flex items-center mt-3 gap-4">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3 mt-2 sm:mt-3">
+            {comment.user._id === user.id && (
+              <>
+                <button
+                  onClick={() => {
+                    setEditingCommentId(comment._id);
+                    setEditedCommentText(comment.text);
+                  }}
+                  className="inline-flex items-center gap-1 px-2 py-1 text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg text-xs transition-colors duration-200"
+                >
+                  ✏️ Edit
+                </button>
+                <button
+                  onClick={() => handleDeleteComment(postId, comment._id)}
+                  className="inline-flex items-center gap-1 px-2 py-1 text-red-600 bg-red-50 hover:bg-red-100 rounded-lg text-xs transition-colors duration-200"
+                >
+                  🗑️ Delete
+                </button>
+              </>
+            )}
+
             <button
               onClick={() => handleCommentLike(comment._id, postId)}
               disabled={commentLikeLoading[comment._id]}
-              className={`inline-flex cursor-pointer items-center gap-1 px-2 py-1 rounded-lg text-xs font-medium transition-colors duration-200 ${
+              className={`inline-flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-medium transition-colors duration-200 ${
                 comment.likes.includes(user._id)
                   ? "text-red-600 bg-red-50 hover:bg-red-100"
                   : "text-gray-600 bg-gray-100 hover:bg-gray-200"
@@ -489,6 +575,7 @@ const Home = () => {
               )}
               {comment.likes.length}
             </button>
+
             <button
               onClick={() =>
                 setShowReplyForm((prev) => ({
@@ -496,7 +583,7 @@ const Home = () => {
                   [comment._id]: !prev[comment._id],
                 }))
               }
-              className="inline-flex cursor-pointer items-center gap-1 px-2 py-1 rounded-lg text-xs font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 transition-colors duration-200"
+              className="inline-flex items-center gap-1 px-2 py-1 text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg text-xs transition-colors duration-200"
             >
               <svg
                 className="w-3 h-3"
