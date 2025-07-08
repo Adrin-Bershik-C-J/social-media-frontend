@@ -5,6 +5,7 @@ import Login from "./pages/Login";
 import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound"; // 👈 import NotFound
 import PrivateRoute from "./components/PrivateRoute";
+import UserProfile from "./pages/UserProfile";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
             </PrivateRoute>
           }
         />
+        <Route path="/user/:username" element={<UserProfile />} />
         {/* 👇 Catch-all route */}
         <Route path="*" element={<NotFound />} />
       </Routes>

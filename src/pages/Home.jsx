@@ -901,12 +901,19 @@ const Home = () => {
                       <div className="flex-1 min-w-0">
                         {/* User Names */}
                         <div className="flex items-center gap-1 sm:gap-2 mb-1 flex-wrap">
-                          <h3 className="font-semibold text-gray-900 text-sm sm:text-base truncate">
-                            {post.user.name}
-                          </h3>
-                          <span className="text-gray-500 text-xs sm:text-sm truncate">
-                            @{post.user.username}
-                          </span>
+                          <div
+                            onClick={() =>
+                              navigate(`/user/${post.user.username}`)
+                            }
+                            className="cursor-pointer"
+                          >
+                            <h3 className="font-semibold text-gray-900 text-sm sm:text-base truncate">
+                              {post.user.name}
+                            </h3>
+                            <span className="text-gray-500 text-xs sm:text-sm truncate">
+                              @{post.user.username}
+                            </span>
+                          </div>
                         </div>
 
                         {/* Date - Hidden on mobile when follow button is present */}

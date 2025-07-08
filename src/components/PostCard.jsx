@@ -1,6 +1,7 @@
 // src/components/PostCard.jsx
 import React, { useState } from "react";
 import CommentsSection from "./CommentsSection";
+import { useAuth } from "../contexts/AuthContext";
 
 const PostCard = ({
   post,
@@ -13,6 +14,9 @@ const PostCard = ({
   saveEdit,
   cancelEdit,
 }) => {
+  const { user: loggedInUser } = useAuth(); // ⬅️ get current user
+
+  const isOwner = loggedInUser?.id === post.user._id; // ⬅️ owner check
   const [activeImages, setActiveImages] = useState([]);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [showImageModal, setShowImageModal] = useState(false);
@@ -209,26 +213,28 @@ const PostCard = ({
           </span>
         </button>
 
-        <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
-          <button
-            onClick={onEdit}
-            className="inline-flex cursor-pointer items-center justify-center px-3 py-2 text-blue-600 bg-blue-50 hover:bg-blue-100 font-medium rounded-lg transition-colors duration-200 text-sm sm:text-base w-full sm:w-auto"
-          >
-            ✏️ Edit
-          </button>
-          <button
-            onClick={() => {
-              if (
-                window.confirm("Are you sure you want to delete this post?")
-              ) {
-                onDelete();
-              }
-            }}
-            className="inline-flex cursor-pointer items-center justify-center px-3 py-2 text-red-600 bg-red-50 hover:bg-red-100 font-medium rounded-lg transition-colors duration-200 text-sm sm:text-base w-full sm:w-auto"
-          >
-            🗑️ Delete
-          </button>
-        </div>
+        {isOwner && (
+          <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+            <button
+              onClick={onEdit}
+              className="inline-flex cursor-pointer items-center justify-center px-3 py-2 text-blue-600 bg-blue-50 hover:bg-blue-100 font-medium rounded-lg transition-colors duration-200 text-sm sm:text-base w-full sm:w-auto"
+            >
+              ✏️ Edit
+            </button>
+            <button
+              onClick={() => {
+                if (
+                  window.confirm("Are you sure you want to delete this post?")
+                ) {
+                  onDelete();
+                }
+              }}
+              className="inline-flex cursor-pointer items-center justify-center px-3 py-2 text-red-600 bg-red-50 hover:bg-red-100 font-medium rounded-lg transition-colors duration-200 text-sm sm:text-base w-full sm:w-auto"
+            >
+              🗑️ Delete
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Comments */}
