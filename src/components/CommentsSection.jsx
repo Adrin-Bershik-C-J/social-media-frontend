@@ -88,7 +88,8 @@ const CommentsSection = ({ postId }) => {
   };
 
   const handleDeleteComment = async (commentId) => {
-    if (!window.confirm("Are you sure you want to delete this comment?")) return;
+    if (!window.confirm("Are you sure you want to delete this comment?"))
+      return;
     setDeleteLoading((prev) => ({ ...prev, [commentId]: true }));
     try {
       await axios.delete(`${URL}/api/comments/${commentId}`, {
@@ -140,8 +141,8 @@ const CommentsSection = ({ postId }) => {
       <div
         key={comment._id}
         className={`mt-3 sm:mt-4 ${
-          depth > 0 
-            ? "ml-3 sm:ml-4 md:ml-6 border-l border-blue-100 pl-2 sm:pl-3 md:pl-4" 
+          depth > 0
+            ? "ml-3 sm:ml-4 md:ml-6 border-l border-blue-100 pl-2 sm:pl-3 md:pl-4"
             : ""
         }`}
       >
@@ -163,7 +164,9 @@ const CommentsSection = ({ postId }) => {
             <div className="flex-1 min-w-0">
               <div className="flex flex-col sm:flex-row sm:items-center sm:gap-2 text-xs sm:text-sm">
                 <p className="font-semibold truncate">{comment.user.name}</p>
-                <span className="text-gray-400 text-xs">@{comment.user.username}</span>
+                <span className="text-gray-400 text-xs">
+                  @{comment.user.username}
+                </span>
               </div>
 
               {editingCommentId === comment._id ? (
@@ -226,7 +229,9 @@ const CommentsSection = ({ postId }) => {
                               d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
                             />
                           </svg>
-                          <span className="min-w-0">{comment.likes.length}</span>
+                          <span className="min-w-0">
+                            {comment.likes.length}
+                          </span>
                         </>
                       )}
                     </button>
@@ -238,24 +243,41 @@ const CommentsSection = ({ postId }) => {
                           [comment._id]: !prev[comment._id],
                         }))
                       }
-                      className="text-blue-600 cursor-pointer hover:underline flex-shrink-0"
+                      className="inline-flex cursor-pointer items-center gap-1 px-2 py-1 text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg text-xs transition-colors duration-200"
                     >
+                      <svg
+                        className="w-3 h-3"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"
+                        />
+                      </svg>
                       Reply
                     </button>
 
                     {comment.user._id?.toString() === user.id?.toString() && (
                       <>
                         <button
-                          onClick={() => startEditing(comment._id, comment.text)}
-                          className="text-blue-600 cursor-pointer hover:underline flex-shrink-0"
+                          onClick={() =>
+                            startEditing(comment._id, comment.text)
+                          }
+                          className="inline-flex cursor-pointer items-center gap-1 px-2 py-1 text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg text-xs transition-colors duration-200"
                         >
-                          Edit
+                          ✏️ Edit
                         </button>
                         <button
                           onClick={() => handleDeleteComment(comment._id)}
-                          className="text-red-600 cursor-pointer hover:underline flex-shrink-0"
+                          className="inline-flex cursor-pointer items-center gap-1 px-2 py-1 text-red-600 bg-red-50 hover:bg-red-100 rounded-lg text-xs transition-colors duration-200"
                         >
-                          {deleteLoading[comment._id] ? "Deleting..." : "Delete"}
+                          {deleteLoading[comment._id]
+                            ? "Deleting..."
+                            : "🗑️ Delete"}
                         </button>
                       </>
                     )}
@@ -280,7 +302,7 @@ const CommentsSection = ({ postId }) => {
                   <div className="flex gap-2">
                     <button
                       onClick={() => handleCreateComment(comment._id)}
-                      className="bg-blue-600 text-white px-2 sm:px-3 py-1 sm:py-2 rounded-lg text-xs sm:text-sm flex-shrink-0"
+                      className="bg-blue-600 cursor-pointer text-white px-2 sm:px-3 py-1 sm:py-2 rounded-lg text-xs sm:text-sm flex-shrink-0"
                     >
                       Reply
                     </button>
@@ -291,7 +313,7 @@ const CommentsSection = ({ postId }) => {
                           [comment._id]: false,
                         }))
                       }
-                      className="bg-gray-300 text-gray-800 px-2 sm:px-3 py-1 sm:py-2 rounded-lg text-xs sm:text-sm flex-shrink-0"
+                      className="bg-gray-300 cursor-pointer text-gray-800 px-2 sm:px-3 py-1 sm:py-2 rounded-lg text-xs sm:text-sm flex-shrink-0"
                     >
                       Cancel
                     </button>
