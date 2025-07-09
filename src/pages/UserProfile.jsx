@@ -18,21 +18,22 @@ const UserProfile = () => {
   const [posts, setPosts] = useState([]);
 
   const token = localStorage.getItem("token");
-
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
         setLoading(true);
-        const userRes = await axios.get(`${URL}/api/users/user/${username}`);
-        setUserData(userRes.data.user);
-        setIsFollowing(
-          userRes.data.user.followers.some((f) => f._id === loggedInUser?.id)
-        );
 
-        const postsRes = await axios.get(`${URL}/api/posts/user/${username}`, {
+        const res = await axios.get(`${URL}/api/users/user/${username}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
-        setPosts(postsRes.data.posts);
+
+        if (!res.data.user) throw new Error("User not found in response");
+
+        setUserData(res.data.user);
+        setPosts(res.data.posts);
+        setIsFollowing(
+          res.data.user.followers.some((f) => f._id === loggedInUser?.id)
+        );
       } catch (err) {
         console.error("Failed to fetch user data:", err);
       } finally {
