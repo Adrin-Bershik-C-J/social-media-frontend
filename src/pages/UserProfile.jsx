@@ -31,9 +31,7 @@ const UserProfile = () => {
 
         setUserData(res.data.user);
         setPosts(res.data.posts);
-        setIsFollowing(
-          res.data.user.followers.some((f) => f._id === loggedInUser?.id)
-        );
+        setIsFollowing(res.data.isFollowing); // use backend value ✅
       } catch (err) {
         console.error("Failed to fetch user data:", err);
       } finally {
@@ -53,7 +51,16 @@ const UserProfile = () => {
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      setIsFollowing(res.data.isFollowing);
+
+      const { isFollowing: newStatus, followersCount } = res.data;
+
+      setIsFollowing(newStatus);
+
+      // 🔄 Update followers count locally
+      setUserData((prev) => ({
+        ...prev,
+        followers: Array.from({ length: followersCount }),
+      }));
     } catch (err) {
       console.error("Error following user:", err);
     } finally {
