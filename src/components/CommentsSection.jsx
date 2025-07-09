@@ -392,7 +392,7 @@ const CommentsSection = ({ postId }) => {
               <button
                 onClick={() => handleCreateComment()}
                 disabled={!newComment.trim()}
-                className="bg-blue-600 text-white px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
+                className="bg-blue-600 cursor-pointer text-white px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
               >
                 Comment
               </button>

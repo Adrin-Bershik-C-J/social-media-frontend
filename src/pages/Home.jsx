@@ -474,7 +474,7 @@ const Home = () => {
                   <div className="flex gap-2">
                     <button
                       onClick={() => handleEditComment(postId, comment._id)}
-                      className="px-3 py-1 bg-green-600 text-white text-sm rounded-lg"
+                      className="px-3 py-1 cursor-pointer bg-green-600 text-white text-sm rounded-lg"
                     >
                       Save
                     </button>
@@ -483,7 +483,7 @@ const Home = () => {
                         setEditingCommentId(null);
                         setEditedCommentText("");
                       }}
-                      className="px-3 py-1 bg-gray-300 text-gray-800 text-sm rounded-lg"
+                      className="px-3 py-1 cursor-pointer bg-gray-300 text-gray-800 text-sm rounded-lg"
                     >
                       Cancel
                     </button>
