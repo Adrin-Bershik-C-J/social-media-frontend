@@ -3,12 +3,14 @@ import axios from "axios";
 import { useAuth } from "../contexts/AuthContext";
 import config from "../config";
 import Spinner from "./Spinner";
+import { useNavigate } from "react-router-dom";
 
 const URL = config.API_URL;
 
 const CommentsSection = ({ postId }) => {
   const { user } = useAuth();
   const token = localStorage.getItem("token");
+  const navigate = useNavigate();
 
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
@@ -140,33 +142,41 @@ const CommentsSection = ({ postId }) => {
     return filtered.map((comment) => (
       <div
         key={comment._id}
-        className={`mt-3 sm:mt-4 ${
-          depth > 0
-            ? "ml-3 sm:ml-4 md:ml-6 border-l border-blue-100 pl-2 sm:pl-3 md:pl-4"
-            : ""
-        }`}
+        className={`${depth > 0 ? "ml-6 border-l-2 border-blue-100 pl-4" : ""}`}
       >
-        <div className="bg-gray-50 border rounded-xl p-2 sm:p-3">
-          <div className="flex items-start gap-2 sm:gap-3">
-            {comment.user.profilePicture ? (
-              <img
-                src={comment.user.profilePicture}
-                alt="User"
-                className="w-6 h-6 sm:w-8 sm:h-8 rounded-full object-cover flex-shrink-0"
-              />
-            ) : (
-              <div className="w-6 h-6 sm:w-8 sm:h-8 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs sm:text-sm font-bold flex-shrink-0">
-                {comment.user.name?.charAt(0).toUpperCase() ||
-                  comment.user.username?.charAt(0).toUpperCase()}
-              </div>
-            )}
+        <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 mb-3">
+          <div className="flex items-start gap-3">
+            {/* ✅ Profile Picture or Initials - Clickable */}
+            <div
+              onClick={() => navigate(`/user/${comment.user.username}`)}
+              className="cursor-pointer"
+            >
+              {comment.user.profilePicture ? (
+                <img
+                  src={comment.user.profilePicture}
+                  alt="User"
+                  className="w-8 h-8 rounded-full object-cover flex-shrink-0"
+                />
+              ) : (
+                <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
+                  {comment.user.name?.charAt(0)?.toUpperCase() ||
+                    comment.user.username?.charAt(0)?.toUpperCase()}
+                </div>
+              )}
+            </div>
 
             <div className="flex-1 min-w-0">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:gap-2 text-xs sm:text-sm">
-                <p className="font-semibold truncate">{comment.user.name}</p>
-                <span className="text-gray-400 text-xs">
+              {/* ✅ Name and Username - Clickable */}
+              <div
+                onClick={() => navigate(`/user/${comment.user.username}`)}
+                className="flex items-center gap-2 mb-1 cursor-pointer"
+              >
+                <p className="font-semibold text-gray-900 text-sm">
+                  {comment.user.name}
+                </p>
+                <p className="text-gray-500 text-sm">
                   @{comment.user.username}
-                </span>
+                </p>
               </div>
 
               {editingCommentId === comment._id ? (

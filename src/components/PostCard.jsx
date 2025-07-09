@@ -152,7 +152,13 @@ const PostCard = ({
       )}
 
       <p className="text-sm text-gray-500 mb-4">
-        {new Date(post.createdAt).toLocaleString("en-US")}
+        {new Date(post.createdAt).toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+          // hour: "2-digit",
+          // minute: "2-digit",
+        })}
       </p>
 
       {/* Action Buttons */}

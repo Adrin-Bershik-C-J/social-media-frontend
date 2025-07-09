@@ -508,10 +508,11 @@ const Home = () => {
 
               <p className="text-xs text-gray-500">
                 {new Date(comment.createdAt).toLocaleDateString("en-US", {
+                  year: "numeric",
                   month: "short",
                   day: "numeric",
-                  hour: "2-digit",
-                  minute: "2-digit",
+                  // hour: "2-digit",
+                  // minute: "2-digit",
                 })}
               </p>
             </div>
@@ -945,8 +946,8 @@ const Home = () => {
                               year: "numeric",
                               month: "long",
                               day: "numeric",
-                              hour: "2-digit",
-                              minute: "2-digit",
+                              // hour: "2-digit",
+                              // minute: "2-digit",
                             }
                           )}
                         </p>
@@ -1008,8 +1009,8 @@ const Home = () => {
                           year: "numeric",
                           month: "long",
                           day: "numeric",
-                          hour: "2-digit",
-                          minute: "2-digit",
+                          // hour: "2-digit",
+                          // minute: "2-digit",
                         })}
                       </p>
                     )}
