@@ -157,7 +157,7 @@ const UserProfile = () => {
 
   return (
     <div className="max-w-3xl mx-auto p-6 space-y-8">
-      <div className="bg-white rounded-xl shadow-md p-6 flex items-center gap-6">
+      <div className="bg-white rounded-xl shadow-md p-6 flex gap-6">
         {userData.profilePicture ? (
           <img
             src={userData.profilePicture}
@@ -173,7 +173,11 @@ const UserProfile = () => {
         <div className="flex-1">
           <h2 className="text-2xl font-bold text-gray-900">{userData.name}</h2>
           <p className="text-gray-600">@{userData.username}</p>
-          <p className="mt-2 text-gray-700">{userData.bio}</p>
+          {userData.bio && (
+            <p className="whitespace-pre-line text-gray-700 leading-relaxed mb-4 max-w-2xl text-sm sm:text-base">
+              {userData.bio}
+            </p>
+          )}
 
           <div className="mt-3 text-sm text-gray-500 flex gap-4">
             <span>{userData.followers.length} Followers</span>

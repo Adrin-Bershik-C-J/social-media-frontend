@@ -882,18 +882,24 @@ const Home = () => {
               >
                 {/* Post Header */}
                 <div className="flex items-start gap-3 sm:gap-4 mb-4">
-                  {post.user.profilePicture ? (
-                    <img
-                      src={post.user.profilePicture}
-                      alt="User"
-                      className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover flex-shrink-0"
-                    />
-                  ) : (
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-green-500 to-blue-600 rounded-full flex items-center justify-center text-white text-base sm:text-lg font-bold flex-shrink-0">
-                      {post.user.name?.charAt(0)?.toUpperCase() ||
-                        post.user.username?.charAt(0)?.toUpperCase()}
-                    </div>
-                  )}
+                  {/* ✅ Wrap profile image/avatar in a clickable div */}
+                  <div
+                    onClick={() => navigate(`/user/${post.user.username}`)}
+                    className="cursor-pointer"
+                  >
+                    {post.user.profilePicture ? (
+                      <img
+                        src={post.user.profilePicture}
+                        alt="User"
+                        className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover flex-shrink-0"
+                      />
+                    ) : (
+                      <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-green-500 to-blue-600 rounded-full flex items-center justify-center text-white text-base sm:text-lg font-bold flex-shrink-0">
+                        {post.user.name?.charAt(0)?.toUpperCase() ||
+                          post.user.username?.charAt(0)?.toUpperCase()}
+                      </div>
+                    )}
+                  </div>
 
                   <div className="flex-1 min-w-0">
                     {/* User Info and Follow Button Container */}
@@ -998,6 +1004,7 @@ const Home = () => {
                     )}
                   </div>
                 </div>
+
                 {/* Post Content */}
                 <div className="mb-6">
                   <p className="text-gray-900 text-lg leading-relaxed">
@@ -1275,7 +1282,7 @@ const Home = () => {
                 </button>
               )}
 
-              {/* Pagination Info */}
+              {/* Pagination Info
               <div className="text-sm text-gray-500">
                 {!hasMore && posts.length > 0 && (
                   <p>
@@ -1288,7 +1295,7 @@ const Home = () => {
                     {totalPages}
                   </p>
                 )}
-              </div>
+              </div> */}
             </div>
           )}
         </div>
