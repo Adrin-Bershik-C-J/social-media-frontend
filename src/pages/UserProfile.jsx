@@ -16,6 +16,8 @@ const UserProfile = () => {
   const [followLoading, setFollowLoading] = useState(false);
   const [isFollowing, setIsFollowing] = useState(false);
   const [posts, setPosts] = useState([]);
+  const [editingPostId, setEditingPostId] = useState(null);
+  const [editedCaption, setEditedCaption] = useState("");
 
   const token = localStorage.getItem("token");
   useEffect(() => {
@@ -233,9 +235,21 @@ const UserProfile = () => {
             <PostCard
               key={post._id}
               post={post}
+              isEditing={editingPostId === post._id}
+              editedCaption={editedCaption}
+              setEditedCaption={setEditedCaption}
+              saveEdit={() => {
+                handleEdit(post._id, editedCaption);
+                setEditingPostId(null);
+              }}
+              cancelEdit={() => setEditingPostId(null)}
+              onEdit={() => {
+                setEditingPostId(post._id);
+                setEditedCaption(post.caption);
+              }}
               onLike={() => handleLike(post._id)}
-              onEdit={() => {}}
               onDelete={() => handleDelete(post._id)}
+              isOwner={loggedInUser?.id === userData._id}
             />
           ))
         ) : (
