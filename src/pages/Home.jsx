@@ -441,21 +441,31 @@ const Home = () => {
       >
         <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 mb-3">
           <div className="flex items-start gap-3">
-            {comment.user.profilePicture ? (
-              <img
-                src={comment.user.profilePicture}
-                alt="User"
-                className="w-8 h-8 rounded-full object-cover flex-shrink-0"
-              />
-            ) : (
-              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
-                {comment.user.name?.charAt(0)?.toUpperCase() ||
-                  comment.user.username?.charAt(0)?.toUpperCase()}
-              </div>
-            )}
+            {/* ✅ Profile Picture or Initials - Clickable */}
+            <div
+              onClick={() => navigate(`/user/${comment.user.username}`)}
+              className="cursor-pointer"
+            >
+              {comment.user.profilePicture ? (
+                <img
+                  src={comment.user.profilePicture}
+                  alt="User"
+                  className="w-8 h-8 rounded-full object-cover flex-shrink-0"
+                />
+              ) : (
+                <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
+                  {comment.user.name?.charAt(0)?.toUpperCase() ||
+                    comment.user.username?.charAt(0)?.toUpperCase()}
+                </div>
+              )}
+            </div>
 
             <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 mb-1">
+              {/* ✅ Name and Username - Clickable */}
+              <div
+                onClick={() => navigate(`/user/${comment.user.username}`)}
+                className="flex items-center gap-2 mb-1 cursor-pointer"
+              >
                 <p className="font-semibold text-gray-900 text-sm">
                   {comment.user.name}
                 </p>
@@ -463,6 +473,7 @@ const Home = () => {
                   @{comment.user.username}
                 </p>
               </div>
+
               {editingCommentId === comment._id ? (
                 <div className="flex flex-col gap-2 mb-2">
                   <input
