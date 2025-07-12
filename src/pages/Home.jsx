@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useAuth } from "../contexts/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import { useNotifications } from "../contexts/NotificationContext";
+import { Bell } from "lucide-react"; // or your preferred icon lib
 import config from "../config";
 const URL = config.API_URL;
 
@@ -43,6 +45,8 @@ const Home = () => {
   const [followingUsers, setFollowingUsers] = useState(new Set()); // Set of user IDs being followed
 
   const token = localStorage.getItem("token");
+
+  const { unreadCount } = useNotifications();
 
   // Initialize following status from user data
   useEffect(() => {
@@ -684,8 +688,8 @@ const Home = () => {
       )}
 
       <div className="max-w-4xl mx-auto px-4 py-8">
-        {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+          {/* Title on the left */}
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
               Home Feed
@@ -694,25 +698,42 @@ const Home = () => {
               Stay connected with your network
             </p>
           </div>
-          <button
-            onClick={() => navigate("/profile")}
-            className="inline-flex items-center cursor-pointer px-4 py-2 text-sm sm:text-base bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-          >
-            <svg
-              className="w-4 h-4 mr-2"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
+
+          {/* Right side: Bell + Profile */}
+          <div className="flex items-center gap-4 self-end sm:self-auto">
+            <Link to="/notifications" className="relative">
+              <Bell className="w-6 h-6 text-gray-700" />
+              {unreadCount > 0 && (
+                <span
+                  className="absolute -top-1 -right-1 bg-red-600 text-white text-xs
+                         font-semibold w-5 h-5 flex items-center justify-center
+                         rounded-full"
+                >
+                  {unreadCount > 9 ? "9+" : unreadCount}
+                </span>
+              )}
+            </Link>
+
+            <button
+              onClick={() => navigate("/profile")}
+              className="inline-flex items-center cursor-pointer px-4 py-2 text-sm sm:text-base bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-              />
-            </svg>
-            Profile
-          </button>
+              <svg
+                className="w-4 h-4 mr-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                />
+              </svg>
+              Profile
+            </button>
+          </div>
         </div>
 
         {/* Create Post Card */}

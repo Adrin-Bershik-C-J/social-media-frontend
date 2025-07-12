@@ -6,6 +6,8 @@ import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound"; // 👈 import NotFound
 import PrivateRoute from "./components/PrivateRoute";
 import UserProfile from "./pages/UserProfile";
+import NotificationsPage from "./pages/NotificationsPage";
+import PostPage from "./pages/PostPage";
 
 function App() {
   return (
@@ -30,6 +32,8 @@ function App() {
           }
         />
         <Route path="/user/:username" element={<UserProfile />} />
+        <Route path="/notifications" element={<NotificationsPage />} />
+        <Route path="/post/:id" element={<PostPage />} />
         {/* 👇 Catch-all route */}
         <Route path="*" element={<NotFound />} />
       </Routes>
