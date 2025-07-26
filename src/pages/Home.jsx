@@ -1065,16 +1065,11 @@ const Home = () => {
 
                   {/* Render Video if present */}
                   {post.video && (
-                    <div className="mt-4">
-                      <video
-                        controls
-                        className="w-full max-w-full max-h-[70vh] sm:max-h-[60vh] md:max-h-[50vh] lg:max-h-96 rounded-xl border border-gray-300 object-cover"
-                        style={{ aspectRatio: "auto" }}
-                      >
-                        <source src={post.video} type="video/mp4" />
-                        Your browser does not support the video tag.
-                      </video>
-                    </div>
+                    <video
+                      controls
+                      src={post.video}
+                      className="w-full rounded-lg max-h-[400px] object-contain border border-gray-300"
+                    />
                   )}
                 </div>
 
